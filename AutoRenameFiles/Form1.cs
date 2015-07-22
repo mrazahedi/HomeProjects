@@ -28,10 +28,11 @@ namespace AutoRenameFiles
             ".mp4",
         };
 
-
+        //-----------------------------------------------------------------------------
         public Form1()
         {
             InitializeComponent();
+            DestResizeDir.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + Path.DirectorySeparatorChar + "ResizedImages";
         }
 
         //-----------------------------------------------------------------------------
@@ -41,7 +42,7 @@ namespace AutoRenameFiles
         }
 
         //-----------------------------------------------------------------------------
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonBrowse_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
             folderBrowser.SelectedPath = dirPath.Text;
@@ -111,9 +112,103 @@ namespace AutoRenameFiles
         }
 
         //-----------------------------------------------------------------------------
+        public void ResizeFiles(string rootDirPath, string destDirPath)
+        {
+            if (!Directory.Exists(rootDirPath))
+            {
+                resizeOutputLabel.ForeColor = Color.Red;
+                resizeOutputLabel.Text = "Invalid source directory path";
+                return;
+            }
+
+            resizeOutputLabel.ForeColor = Color.Black;
+
+            List<string> allFilePaths = new List<string>(Directory.GetFiles(rootDirPath));
+            string[] allDirectories = Directory.GetDirectories(rootDirPath, "*", SearchOption.AllDirectories);
+            foreach (string directoryPath in allDirectories)
+            {
+                allFilePaths.AddRange(Directory.GetFiles(directoryPath));
+            }
+
+            resizeProgBar.Value = 0;
+            resizeProgBar.Maximum = allFilePaths.Count();
+
+            foreach (string filePath in allFilePaths)
+            {
+                resizeProgBar.PerformStep();
+
+                if (!IMAGE_EXTENSION_LIST.Contains(Path.GetExtension(filePath).ToLower()))
+                    continue;
+
+                Log(filePath);
+                resizeOutputLabel.Text = "Resizing " + filePath;
+                ResizeImage(800, 800, filePath, rootDirPath, destDirPath);
+            }
+            resizeOutputLabel.Text = "Completed";
+        }
+
+        //-----------------------------------------------------------------------------
+        public void ResizeImage(int maxWidth, int maxHeight, string path, string rootDirPath, string DestDirPath)
+        {
+            var image = System.Drawing.Image.FromFile(path);
+            var ratioX = (double)maxWidth / image.Width;
+            var ratioY = (double)maxHeight / image.Height;
+            var ratio = Math.Min(ratioX, ratioY);
+            var newWidth = (int)(image.Width * ratio);
+            var newHeight = (int)(image.Height * ratio);
+            var newImage = new Bitmap(newWidth, newHeight);
+            Graphics thumbGraph = Graphics.FromImage(newImage);
+
+            thumbGraph.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+            thumbGraph.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            //thumbGraph.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            thumbGraph.DrawImage(image, 0, 0, newWidth, newHeight);
+            image.Dispose();
+
+            string finalPath = Path.GetDirectoryName(path) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(path) + "_resized" + Path.GetExtension(path);
+            finalPath = finalPath.Replace(rootDirPath, DestDirPath);
+
+            string finalDirPath = Path.GetDirectoryName(finalPath);
+            if (!Directory.Exists(finalDirPath))
+                Directory.CreateDirectory(finalDirPath);
+
+            newImage.Save(finalPath);
+        }
+
+        //-----------------------------------------------------------------------------
         public void Log(string message)
         {
             System.Diagnostics.Debug.Write("\n" + message);
+        }
+
+        //-----------------------------------------------------------------------------
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            ResizeFiles(resizeDir.Text, DestResizeDir.Text);
+        }
+
+        //-----------------------------------------------------------------------------
+        private void resizeButtonBrowse_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
+            folderBrowser.SelectedPath = resizeDir.Text;
+
+            if (folderBrowser.ShowDialog() == DialogResult.OK)
+            {
+                resizeDir.Text = folderBrowser.SelectedPath;
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
+            folderBrowser.SelectedPath = DestResizeDir.Text;
+
+            if (folderBrowser.ShowDialog() == DialogResult.OK)
+            {
+                DestResizeDir.Text = folderBrowser.SelectedPath;
+            }
         }
     }
 }
