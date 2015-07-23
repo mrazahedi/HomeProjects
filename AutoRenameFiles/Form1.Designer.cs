@@ -128,22 +128,22 @@
             // radioButtonNoSpace
             // 
             this.radioButtonNoSpace.AutoSize = true;
-            this.radioButtonNoSpace.Checked = true;
-            this.radioButtonNoSpace.Location = new System.Drawing.Point(30, 61);
+            this.radioButtonNoSpace.Location = new System.Drawing.Point(30, 84);
             this.radioButtonNoSpace.Name = "radioButtonNoSpace";
             this.radioButtonNoSpace.Size = new System.Drawing.Size(137, 17);
             this.radioButtonNoSpace.TabIndex = 16;
-            this.radioButtonNoSpace.TabStop = true;
             this.radioButtonNoSpace.Text = "No Space - Ex: pic4.jpg";
             this.radioButtonNoSpace.UseVisualStyleBackColor = true;
             // 
             // radioButtonUseSpace
             // 
             this.radioButtonUseSpace.AutoSize = true;
-            this.radioButtonUseSpace.Location = new System.Drawing.Point(30, 84);
+            this.radioButtonUseSpace.Checked = true;
+            this.radioButtonUseSpace.Location = new System.Drawing.Point(30, 61);
             this.radioButtonUseSpace.Name = "radioButtonUseSpace";
             this.radioButtonUseSpace.Size = new System.Drawing.Size(145, 17);
             this.radioButtonUseSpace.TabIndex = 15;
+            this.radioButtonUseSpace.TabStop = true;
             this.radioButtonUseSpace.Text = "Use Space - Ex: pic 4.jpg";
             this.radioButtonUseSpace.UseVisualStyleBackColor = true;
             // 
