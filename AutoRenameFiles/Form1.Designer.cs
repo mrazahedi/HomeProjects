@@ -42,6 +42,10 @@
             this.buttonBrowse = new System.Windows.Forms.Button();
             this.buttonRun = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.DestResizeDir = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.maxHeightText = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.maxWidthText = new System.Windows.Forms.TextBox();
@@ -51,10 +55,6 @@
             this.resizeDir = new System.Windows.Forms.TextBox();
             this.resizeButtonBrowse = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.DestResizeDir = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.AutoRename.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -214,6 +214,41 @@
             this.tabPage2.Text = "Resize";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(28, 129);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(54, 13);
+            this.label4.TabIndex = 27;
+            this.label4.Text = "Dest Path";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(28, 14);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(66, 13);
+            this.label3.TabIndex = 26;
+            this.label3.Text = "Source Path";
+            // 
+            // DestResizeDir
+            // 
+            this.DestResizeDir.Location = new System.Drawing.Point(28, 145);
+            this.DestResizeDir.Name = "DestResizeDir";
+            this.DestResizeDir.Size = new System.Drawing.Size(241, 20);
+            this.DestResizeDir.TabIndex = 25;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(275, 145);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 24;
+            this.button1.Text = "Browse";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // maxHeightText
             // 
             this.maxHeightText.Location = new System.Drawing.Point(224, 89);
@@ -271,7 +306,6 @@
             this.resizeDir.Name = "resizeDir";
             this.resizeDir.Size = new System.Drawing.Size(241, 20);
             this.resizeDir.TabIndex = 17;
-            this.resizeDir.Text = "C:\\Users\\Ale\\Desktop\\AAAAAA";
             // 
             // resizeButtonBrowse
             // 
@@ -293,41 +327,6 @@
             this.button2.Text = "Run";
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click_1);
-            // 
-            // DestResizeDir
-            // 
-            this.DestResizeDir.Location = new System.Drawing.Point(28, 145);
-            this.DestResizeDir.Name = "DestResizeDir";
-            this.DestResizeDir.Size = new System.Drawing.Size(241, 20);
-            this.DestResizeDir.TabIndex = 25;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(275, 145);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "Browse";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(28, 14);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 13);
-            this.label3.TabIndex = 26;
-            this.label3.Text = "Source Path";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(28, 129);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(54, 13);
-            this.label4.TabIndex = 27;
-            this.label4.Text = "Dest Path";
             // 
             // Form1
             // 

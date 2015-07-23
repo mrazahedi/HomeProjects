@@ -58,9 +58,12 @@ namespace AutoRenameFiles
         {
             if (!Directory.Exists(rootDirPath))
             {
+                outputLabel.ForeColor = Color.Red;
                 outputLabel.Text = "Invalid directory path";
                 return;
             }
+
+            outputLabel.ForeColor = Color.Black;
 
             RenameFiles(Directory.GetFiles(rootDirPath), Path.GetDirectoryName(rootDirPath), "TEMP", useSpace);
             RenameFiles(Directory.GetFiles(rootDirPath), Path.GetDirectoryName(rootDirPath), "", useSpace);
@@ -76,6 +79,7 @@ namespace AutoRenameFiles
                 progBar.PerformStep();
             }
 
+            outputLabel.ForeColor = Color.Green;
             outputLabel.Text = "Completed";
         }
 
@@ -112,12 +116,33 @@ namespace AutoRenameFiles
         }
 
         //-----------------------------------------------------------------------------
-        public void ResizeFiles(string rootDirPath, string destDirPath)
+        public void ResizeFiles(string rootDirPath, string destDirPath, string maxWidthT, string maxHeightT)
         {
             if (!Directory.Exists(rootDirPath))
             {
                 resizeOutputLabel.ForeColor = Color.Red;
                 resizeOutputLabel.Text = "Invalid source directory path";
+                return;
+            }
+
+            int maxWidth = 0;
+            int maxHeight = 0;
+            try
+            {
+                maxWidth = System.Convert.ToInt16(maxWidthT);
+                maxHeight = System.Convert.ToInt32(maxHeightT);
+            }
+            catch
+            {
+                resizeOutputLabel.ForeColor = Color.Red;
+                resizeOutputLabel.Text = "Inavlid size specified for maxWidth or maxHeight";
+                return;
+            }
+
+            if (maxWidth == 0 || maxHeight == 0)
+            {
+                resizeOutputLabel.ForeColor = Color.Red;
+                resizeOutputLabel.Text = "Inavlid size specified for maxWidth or maxHeight";
                 return;
             }
 
@@ -142,8 +167,10 @@ namespace AutoRenameFiles
 
                 Log(filePath);
                 resizeOutputLabel.Text = "Resizing " + filePath;
-                ResizeImage(800, 800, filePath, rootDirPath, destDirPath);
+                ResizeImage(maxWidth, maxHeight, filePath, rootDirPath, destDirPath);
             }
+
+            resizeOutputLabel.ForeColor = Color.Green;
             resizeOutputLabel.Text = "Completed";
         }
 
@@ -185,7 +212,7 @@ namespace AutoRenameFiles
         //-----------------------------------------------------------------------------
         private void button2_Click_1(object sender, EventArgs e)
         {
-            ResizeFiles(resizeDir.Text, DestResizeDir.Text);
+            ResizeFiles(resizeDir.Text, DestResizeDir.Text, maxWidthText.Text, maxHeightText.Text);
         }
 
         //-----------------------------------------------------------------------------
