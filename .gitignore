@@ -1,0 +1,9 @@
+AutoRenameFiles/AutoRenameFiles.suo
+AutoRenameFiles/AutoRenameFiles/bin/Debug/AutoRenameFiles.exe
+*.pdb
+AutoRenameFiles/AutoRenameFiles/bin/Debug/AutoRenameFiles.vshost.exe.manifest
+*.exe
+AutoRenameFiles/AutoRenameFiles/obj/Debug/AutoRenameFiles.Form1.resources
+*.resources
+AutoRenameFiles/AutoRenameFiles/obj/Debug/AutoRenameFiles.csproj.GenerateResource.Cache
+AutoRenameFiles/AutoRenameFiles/obj/Debug/AutoRenameFiles.csproj.FileListAbsolute.txt
