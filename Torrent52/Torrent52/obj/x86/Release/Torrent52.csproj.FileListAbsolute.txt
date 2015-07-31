@@ -1,0 +1,5 @@
+E:\HomeProjects\Torrent52\Torrent52\bin\Release\Torrent52.exe.config
+E:\HomeProjects\Torrent52\Torrent52\bin\Release\Torrent52.exe
+E:\HomeProjects\Torrent52\Torrent52\bin\Release\Torrent52.pdb
+E:\HomeProjects\Torrent52\Torrent52\obj\x86\Release\Torrent52.exe
+E:\HomeProjects\Torrent52\Torrent52\obj\x86\Release\Torrent52.pdb

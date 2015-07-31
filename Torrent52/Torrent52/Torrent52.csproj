@@ -109,8 +109,6 @@
     <Content Include="uTorrent\src\copying.txt" />
     <Content Include="uTorrent\src\UTorrentAPI.csproj" />
     <Content Include="uTorrent\src\UTorrentAPI.sln" />
-    <Content Include="u_torrent %281%29.ico" />
-    <Content Include="z_file_torrent.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

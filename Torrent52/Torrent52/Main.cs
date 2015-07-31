@@ -13,6 +13,7 @@ namespace Torrent52
     {
         private readonly int CLEANUP_FREQ_MS = 15000;
         private readonly string LOG_FILE_NAME = "DownloadLog.txt";
+        private readonly string NEW_DOWNLOADED_FILE_TAG = "---NEW-- ";
 
         private System.Threading.Thread _cleanupThread;
         private System.Threading.Thread _torrentShutDownThread;
@@ -122,6 +123,7 @@ namespace Torrent52
                     List<Torrent> inProgressTorrents = new List<Torrent>();
                     DeleteCompletedTorrentJobs(ref inProgressTorrents);
                     MoveCompletedFiles(inProgressTorrents);
+                    UpdateFileNameStatus();
                 }
                 catch (Exception e)
                 {
@@ -134,6 +136,7 @@ namespace Torrent52
         private void DeleteCompletedTorrentJobs(ref List<Torrent> inProgressTorrents)
         {
             List<Torrent> completedTorrentJobs = new List<Torrent>();
+            List<Torrent> torrentsWithError = new List<Torrent>();
             TorrentCollection torrentCollection = _torrentApi.GetTorrentJobs();
 
             if (torrentCollection == null)
@@ -144,7 +147,11 @@ namespace Torrent52
                 if (torrent == null)
                     continue;
 
-                if (/*torrent.Status == TorrentStatus.FinishedOrStopped && */torrent.ProgressInMils >= 1000)
+                if (torrent.Status == TorrentStatus.Error)
+                {
+                    torrentsWithError.Add(torrent);
+                }
+                else if (/*torrent.Status == TorrentStatus.FinishedOrStopped && */torrent.ProgressInMils >= 1000)
                 {
                     LogData("Downloaded " + torrent.Name);
                     completedTorrentJobs.Add(torrent);
@@ -157,8 +164,39 @@ namespace Torrent52
 
             foreach (Torrent torrent in completedTorrentJobs)
             {
-                LogData("Removing torretn from uTorrent: " + torrent.Name);
+                LogData("Removing torrent from uTorrent: " + torrent.Name);
                 torrentCollection.Remove(torrent);
+            }
+
+            foreach (Torrent torrent in torrentsWithError)
+            {
+                LogData("Removing torrent because of error - Name: " + torrent.Name + " --- Error: " + torrent.StatusMessage);
+                torrentCollection.Remove(torrent);
+            }
+        }
+
+        //--------------------------------------------------------------------
+        private void UpdateFileNameStatus()
+        {
+            DateTime twoDaysAgo = DateTime.Now.AddDays(-3);
+
+            List<string> filePaths = GetMovieFiles(_movieDirPath);
+            string[] directories = System.IO.Directory.GetDirectories(_baseDirPath, "*", SearchOption.AllDirectories);
+            foreach (string dir in directories)
+            {
+                if (dir.ToLower().Contains(_downloadDirPath.ToLower()))
+                    continue;
+
+                DirectoryInfo dirInfo = new DirectoryInfo(dir);
+                DateTime created = dirInfo.CreationTime;
+                if (dirInfo.CreationTime > twoDaysAgo && !GetDirectoryName(dir).StartsWith(NEW_DOWNLOADED_FILE_TAG))
+                {
+                    System.IO.Directory.Move(dir, dir.Replace(GetDirectoryName(dir), NEW_DOWNLOADED_FILE_TAG + GetDirectoryName(dir)));
+                }
+                else if (dirInfo.CreationTime <= twoDaysAgo && GetDirectoryName(dir).StartsWith(NEW_DOWNLOADED_FILE_TAG))
+                {
+                    System.IO.Directory.Move(dir, dir.Replace(NEW_DOWNLOADED_FILE_TAG, ""));
+                }
             }
         }
 
