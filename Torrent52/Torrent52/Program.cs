@@ -10,13 +10,14 @@ namespace Torrent52
         static void Main(string[] args)
         {
             bool errorFound = false;
-            if (args.Length != 4)
+            if (args.Length != 5)
             {
-                Console.WriteLine("Need to pass 4 arguments: \n" +
+                Console.WriteLine("Need to pass the following arguments: \n" +
                                     "Download root directory path - Ex: C:\\Downloads \n" +
                                     "Torrent download directory name in download root directory path - Ex: Misc \n" +
                                     "File directory match accuracy - Ex: 0.8" +
-                                    "Auto close frequency in min - Ex: 5");
+                                    "Auto close frequency in min - Ex: 5" +
+                                    "Torrent software path - Ex: C:\\Users\\Ali\\AppData\\Roaming\\uTorrent\\uTorrent.exe");
                 errorFound = true;
             }
 
@@ -42,15 +43,21 @@ namespace Torrent52
                 errorFound = true;
             }
 
+            if (!errorFound && string.IsNullOrEmpty(args[4]))
+            {
+                Console.WriteLine("Was not able to parse the fifth parameter that specifies the torrent file path ");
+                errorFound = true;
+            }
+
             Main main = null;
             if (errorFound)
             {
                 Console.WriteLine("Default arguments will be used - C:\\Downloads Misc 0.8 5");
-                main = new Main("C:\\Downloads", "Misc", 0.8f, 5);
+                main = new Main("C:\\Downloads", "Misc", 0.8f, 5, @"C:\Users\Ali\AppData\Roaming\uTorrent\uTorrent.exe");
             }
             else
             {
-                main = new Main(args[0], args[1], accuracy, autoCloseFrequency);
+                main = new Main(args[0], args[1], accuracy, autoCloseFrequency, args[4]);
             }
 
             //Main main = new Main("C:\\Downloads", "Misc", 0.8f);

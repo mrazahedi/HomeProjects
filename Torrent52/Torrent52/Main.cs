@@ -26,16 +26,19 @@ namespace Torrent52
         private float _matchPercentage;
         private int _autoCloseFrequency;
 
+        private string _torrentFilePath = "";
+
         private System.IO.StreamWriter _logFileStreamWriter = null;
 
         //--------------------------------------------------------------------
-        public Main(string baseDirPath, string downloadDirName, float matchPerc, int autoCloseFrequency)
+        public Main(string baseDirPath, string downloadDirName, float matchPerc, int autoCloseFrequency, string torrentFilePath)
         {
             _baseDirPath = baseDirPath;
             _downloadDirPath = _baseDirPath + Path.DirectorySeparatorChar + downloadDirName;
             _movieDirPath = _baseDirPath + Path.DirectorySeparatorChar + "Movies";
             _matchPercentage = matchPerc;
             _autoCloseFrequency = autoCloseFrequency * 60 * 1000;
+            _torrentFilePath = torrentFilePath;
         }
 
         ~Main()
@@ -83,7 +86,7 @@ namespace Torrent52
                     if (ShouldTorrentRun())
                     {
                         if (Process.GetProcessesByName("utorrent").Count() == 0)
-                            System.Diagnostics.Process.Start(@"C:\Users\Ale\AppData\Roaming\uTorrent\uTorrent.exe");
+                            System.Diagnostics.Process.Start(_torrentFilePath);
                     }
                     else
                     {

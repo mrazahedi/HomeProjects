@@ -7,3 +7,6 @@ AutoRenameFiles/AutoRenameFiles/obj/Debug/AutoRenameFiles.Form1.resources
 *.resources
 AutoRenameFiles/AutoRenameFiles/obj/Debug/AutoRenameFiles.csproj.GenerateResource.Cache
 AutoRenameFiles/AutoRenameFiles/obj/Debug/AutoRenameFiles.csproj.FileListAbsolute.txt
+*.suo
+Torrent52/Torrent52.suo
+*.suo
