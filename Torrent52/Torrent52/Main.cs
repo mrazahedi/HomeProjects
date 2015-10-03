@@ -14,6 +14,7 @@ namespace Torrent52
         private readonly int CLEANUP_FREQ_MS = 15000;
         private readonly string LOG_FILE_NAME = "DownloadLog.txt";
         private readonly string NEW_DOWNLOADED_FILE_TAG = "---NEW-- ";
+        private readonly List<int> OPEN_TORRENT_TIMES = new List<int>() { 3, 6, 9, 15, 18, 19, 20, 21, 22 };
 
         private System.Threading.Thread _cleanupThread;
         private System.Threading.Thread _torrentShutDownThread;
@@ -27,7 +28,6 @@ namespace Torrent52
         private int _autoCloseFrequency;
 
         private string _torrentFilePath = "";
-
         private System.IO.StreamWriter _logFileStreamWriter = null;
 
         //--------------------------------------------------------------------
@@ -111,7 +111,7 @@ namespace Torrent52
         private bool ShouldTorrentRun()
         {
             int currentHour = DateTime.Now.TimeOfDay.Hours;
-            return currentHour == 3 || currentHour == 9 || currentHour == 15;
+            return OPEN_TORRENT_TIMES.Contains(currentHour);
         }
 
         //--------------------------------------------------------------------
