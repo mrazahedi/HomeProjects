@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="DIconManager">
+</Property><Property Name="Solution File" Value="C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\DIconManager.sln">
+</Property><Property Name="User Options File" Value="C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\DIconManager.suo">
+</Property><Property Name="Date" Value="February-09-10">
+</Property><Property Name="Time" Value="1:13 AM">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="DIconManager.sln" Description="File successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\DIconManager.sln">
+</Event><Event ErrorLevel="0" Project="" Source="DIconManager.suo" Description="File successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\DIconManager.suo">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="DIconManager.csproj" Description="Project file successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\DIconManager.csproj">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="DesktopIcon.cs" Description="File successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\DesktopIcon.cs">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="IconManager.cs" Description="File successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\IconManager.cs">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="IconManager.Designer.cs" Description="File successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\IconManager.Designer.cs">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="Program.cs" Description="File successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\Program.cs">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="Properties\AssemblyInfo.cs" Description="File successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="Properties\Resources.Designer.cs" Description="File successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\Properties\Resources.Designer.cs">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="Properties\Settings.Designer.cs" Description="File successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\Properties\Settings.Designer.cs">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="Properties\Settings.settings" Description="File successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\Properties\Settings.settings">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="IconManager.resx" Description="File successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\IconManager.resx">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="Properties\Resources.resx" Description="File successfully backed up as C:\Users\Ale\Desktop\DIconManager\DIconManager\DIconManager\Backup\Properties\Resources.resx">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="DIconManager.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="DIconManager" Source="DIconManager.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="DIconManager.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="DIconManager.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="DIconManager" Source="DIconManager.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>
