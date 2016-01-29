@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading;
 
 namespace AutoRenameFiles
 {
@@ -36,13 +37,13 @@ namespace AutoRenameFiles
         }
 
         //-----------------------------------------------------------------------------
-        private void button1_Click(object sender, EventArgs e)
+        private void renameButtonRun_Click(object sender, EventArgs e)
         {
             RenameFiles(dirPath.Text, radioButtonUseSpace.Checked);
         }
 
         //-----------------------------------------------------------------------------
-        private void buttonBrowse_Click(object sender, EventArgs e)
+        private void renameButtonBrowse_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
             folderBrowser.SelectedPath = dirPath.Text;
@@ -65,22 +66,43 @@ namespace AutoRenameFiles
 
             outputLabel.ForeColor = Color.Black;
 
-            RenameFiles(Directory.GetFiles(rootDirPath), Path.GetDirectoryName(rootDirPath), "TEMP", useSpace);
-            RenameFiles(Directory.GetFiles(rootDirPath), Path.GetDirectoryName(rootDirPath), "", useSpace);
-
-            string[] allDirectories = Directory.GetDirectories(rootDirPath, "*", SearchOption.AllDirectories);
-            progBar.Value = 0;
-            progBar.Maximum = allDirectories.Count();
-            foreach (string directoryPath in allDirectories)
+            new Thread(new ThreadStart(() =>
             {
-                outputLabel.Text = "Renaming files in " + directoryPath;
-                RenameFiles(Directory.GetFiles(directoryPath), Path.GetDirectoryName(directoryPath), "TEMP", useSpace);
-                RenameFiles(Directory.GetFiles(directoryPath), Path.GetDirectoryName(directoryPath), "", useSpace);
-                progBar.PerformStep();
-            }
+                
+                RenameFiles(Directory.GetFiles(rootDirPath), Path.GetDirectoryName(rootDirPath), "TEMP", useSpace);
+                RenameFiles(Directory.GetFiles(rootDirPath), Path.GetDirectoryName(rootDirPath), "", useSpace);
 
-            outputLabel.ForeColor = Color.Green;
-            outputLabel.Text = "Completed";
+                string[] allDirectories = Directory.GetDirectories(rootDirPath, "*", SearchOption.AllDirectories);
+
+                progBar.BeginInvoke(new Action(() =>
+                {
+                    progBar.Value = 0;
+                    progBar.Maximum = allDirectories.Count();
+                }));
+
+                foreach (string directoryPath in allDirectories)
+                {
+                    outputLabel.BeginInvoke(new Action(() =>
+                    {
+                        outputLabel.Text = "Renaming files in " + directoryPath;
+                    }));
+
+                    RenameFiles(Directory.GetFiles(directoryPath), Path.GetDirectoryName(directoryPath), "TEMP", useSpace);
+                    RenameFiles(Directory.GetFiles(directoryPath), Path.GetDirectoryName(directoryPath), "", useSpace);
+
+                    progBar.BeginInvoke(new Action(() =>
+                    {
+                        progBar.PerformStep();
+                    }));
+                    
+                }
+                outputLabel.BeginInvoke(new Action(() =>
+                {
+                    outputLabel.ForeColor = Color.Green;
+                    outputLabel.Text = "Completed";
+                }));
+
+            })).Start();
         }
 
         //-----------------------------------------------------------------------------
@@ -158,20 +180,36 @@ namespace AutoRenameFiles
             resizeProgBar.Value = 0;
             resizeProgBar.Maximum = allFilePaths.Count();
 
-            foreach (string filePath in allFilePaths)
+            new Thread(new ThreadStart(() =>
             {
-                resizeProgBar.PerformStep();
+                foreach (string filePath in allFilePaths)
+                {
+                    resizeProgBar.BeginInvoke(new Action(() =>
+                    {
+                        resizeProgBar.PerformStep();
+                    }));
 
-                if (!IMAGE_EXTENSION_LIST.Contains(Path.GetExtension(filePath).ToLower()))
-                    continue;
+                    if (!IMAGE_EXTENSION_LIST.Contains(Path.GetExtension(filePath).ToLower()))
+                        continue;
 
-                Log(filePath);
-                resizeOutputLabel.Text = "Resizing " + filePath;
-                ResizeImage(maxWidth, maxHeight, filePath, rootDirPath, destDirPath);
-            }
+                    Log(filePath);
 
-            resizeOutputLabel.ForeColor = Color.Green;
-            resizeOutputLabel.Text = "Completed";
+                    resizeOutputLabel.BeginInvoke(new Action(() =>
+                    {
+                        resizeOutputLabel.Text = "Resizing " + filePath;
+                    }));
+
+                   
+                    ResizeImage(maxWidth, maxHeight, filePath, rootDirPath, destDirPath);
+                }
+
+                resizeOutputLabel.BeginInvoke(new Action(() =>
+                {
+                    resizeOutputLabel.ForeColor = Color.Green;
+                    resizeOutputLabel.Text = "Completed";
+                }));
+
+            })).Start();
         }
 
         //-----------------------------------------------------------------------------
@@ -210,7 +248,7 @@ namespace AutoRenameFiles
         }
 
         //-----------------------------------------------------------------------------
-        private void button2_Click_1(object sender, EventArgs e)
+        private void resizeButtonRun_Click(object sender, EventArgs e)
         {
             ResizeFiles(resizeDir.Text, DestResizeDir.Text, maxWidthText.Text, maxHeightText.Text);
         }
@@ -227,7 +265,8 @@ namespace AutoRenameFiles
             }
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        //-----------------------------------------------------------------------------
+        private void resizeDestBrwsButton_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
             folderBrowser.SelectedPath = DestResizeDir.Text;

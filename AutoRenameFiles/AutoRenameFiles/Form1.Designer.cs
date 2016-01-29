@@ -39,13 +39,13 @@
             this.progBar = new System.Windows.Forms.ProgressBar();
             this.outputLabel = new System.Windows.Forms.Label();
             this.dirPath = new System.Windows.Forms.TextBox();
-            this.buttonBrowse = new System.Windows.Forms.Button();
-            this.buttonRun = new System.Windows.Forms.Button();
+            this.renameButtonBrowse = new System.Windows.Forms.Button();
+            this.renameButtonRun = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.DestResizeDir = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.resizeDestBrwsButton = new System.Windows.Forms.Button();
             this.maxHeightText = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.maxWidthText = new System.Windows.Forms.TextBox();
@@ -54,7 +54,7 @@
             this.resizeOutputLabel = new System.Windows.Forms.Label();
             this.resizeDir = new System.Windows.Forms.TextBox();
             this.resizeButtonBrowse = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.resizeButtonRun = new System.Windows.Forms.Button();
             this.AutoRename.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -66,10 +66,10 @@
             this.AutoRename.AccessibleName = "";
             this.AutoRename.Controls.Add(this.tabPage1);
             this.AutoRename.Controls.Add(this.tabPage2);
-            this.AutoRename.Location = new System.Drawing.Point(0, 1);
+            this.AutoRename.Location = new System.Drawing.Point(3, 1);
             this.AutoRename.Name = "AutoRename";
             this.AutoRename.SelectedIndex = 0;
-            this.AutoRename.Size = new System.Drawing.Size(420, 270);
+            this.AutoRename.Size = new System.Drawing.Size(492, 279);
             this.AutoRename.TabIndex = 10;
             this.AutoRename.Tag = "";
             // 
@@ -83,12 +83,12 @@
             this.tabPage1.Controls.Add(this.progBar);
             this.tabPage1.Controls.Add(this.outputLabel);
             this.tabPage1.Controls.Add(this.dirPath);
-            this.tabPage1.Controls.Add(this.buttonBrowse);
-            this.tabPage1.Controls.Add(this.buttonRun);
+            this.tabPage1.Controls.Add(this.renameButtonBrowse);
+            this.tabPage1.Controls.Add(this.renameButtonRun);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(412, 244);
+            this.tabPage1.Size = new System.Drawing.Size(484, 253);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Rename";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -171,32 +171,33 @@
             this.dirPath.Size = new System.Drawing.Size(241, 20);
             this.dirPath.TabIndex = 12;
             // 
-            // buttonBrowse
+            // renameButtonBrowse
             // 
-            this.buttonBrowse.Location = new System.Drawing.Point(277, 24);
-            this.buttonBrowse.Name = "buttonBrowse";
-            this.buttonBrowse.Size = new System.Drawing.Size(75, 23);
-            this.buttonBrowse.TabIndex = 11;
-            this.buttonBrowse.Text = "Browse";
-            this.buttonBrowse.UseVisualStyleBackColor = true;
-            this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
+            this.renameButtonBrowse.Location = new System.Drawing.Point(311, 21);
+            this.renameButtonBrowse.Name = "renameButtonBrowse";
+            this.renameButtonBrowse.Size = new System.Drawing.Size(75, 23);
+            this.renameButtonBrowse.TabIndex = 11;
+            this.renameButtonBrowse.Text = "Browse";
+            this.renameButtonBrowse.UseVisualStyleBackColor = true;
+            this.renameButtonBrowse.Click += new System.EventHandler(this.renameButtonBrowse_Click);
             // 
-            // buttonRun
+            // renameButtonRun
             // 
-            this.buttonRun.BackColor = System.Drawing.Color.LightGreen;
-            this.buttonRun.Location = new System.Drawing.Point(277, 55);
-            this.buttonRun.Name = "buttonRun";
-            this.buttonRun.Size = new System.Drawing.Size(75, 23);
-            this.buttonRun.TabIndex = 10;
-            this.buttonRun.Text = "Run";
-            this.buttonRun.UseVisualStyleBackColor = false;
+            this.renameButtonRun.BackColor = System.Drawing.Color.LightGreen;
+            this.renameButtonRun.Location = new System.Drawing.Point(311, 55);
+            this.renameButtonRun.Name = "renameButtonRun";
+            this.renameButtonRun.Size = new System.Drawing.Size(75, 23);
+            this.renameButtonRun.TabIndex = 10;
+            this.renameButtonRun.Text = "Run";
+            this.renameButtonRun.UseVisualStyleBackColor = false;
+            this.renameButtonRun.Click += new System.EventHandler(this.renameButtonRun_Click);
             // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Controls.Add(this.label3);
             this.tabPage2.Controls.Add(this.DestResizeDir);
-            this.tabPage2.Controls.Add(this.button1);
+            this.tabPage2.Controls.Add(this.resizeDestBrwsButton);
             this.tabPage2.Controls.Add(this.maxHeightText);
             this.tabPage2.Controls.Add(this.label2);
             this.tabPage2.Controls.Add(this.maxWidthText);
@@ -205,11 +206,11 @@
             this.tabPage2.Controls.Add(this.resizeOutputLabel);
             this.tabPage2.Controls.Add(this.resizeDir);
             this.tabPage2.Controls.Add(this.resizeButtonBrowse);
-            this.tabPage2.Controls.Add(this.button2);
+            this.tabPage2.Controls.Add(this.resizeButtonRun);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(412, 244);
+            this.tabPage2.Size = new System.Drawing.Size(484, 253);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Resize";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -239,15 +240,15 @@
             this.DestResizeDir.Size = new System.Drawing.Size(241, 20);
             this.DestResizeDir.TabIndex = 25;
             // 
-            // button1
+            // resizeDestBrwsButton
             // 
-            this.button1.Location = new System.Drawing.Point(275, 145);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "Browse";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.resizeDestBrwsButton.Location = new System.Drawing.Point(275, 145);
+            this.resizeDestBrwsButton.Name = "resizeDestBrwsButton";
+            this.resizeDestBrwsButton.Size = new System.Drawing.Size(75, 23);
+            this.resizeDestBrwsButton.TabIndex = 24;
+            this.resizeDestBrwsButton.Text = "Browse";
+            this.resizeDestBrwsButton.UseVisualStyleBackColor = true;
+            this.resizeDestBrwsButton.Click += new System.EventHandler(this.resizeDestBrwsButton_Click);
             // 
             // maxHeightText
             // 
@@ -317,22 +318,22 @@
             this.resizeButtonBrowse.UseVisualStyleBackColor = true;
             this.resizeButtonBrowse.Click += new System.EventHandler(this.resizeButtonBrowse_Click);
             // 
-            // button2
+            // resizeButtonRun
             // 
-            this.button2.BackColor = System.Drawing.Color.LightGreen;
-            this.button2.Location = new System.Drawing.Point(275, 58);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 15;
-            this.button2.Text = "Run";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            this.resizeButtonRun.BackColor = System.Drawing.Color.LightGreen;
+            this.resizeButtonRun.Location = new System.Drawing.Point(275, 58);
+            this.resizeButtonRun.Name = "resizeButtonRun";
+            this.resizeButtonRun.Size = new System.Drawing.Size(75, 23);
+            this.resizeButtonRun.TabIndex = 15;
+            this.resizeButtonRun.Text = "Run";
+            this.resizeButtonRun.UseVisualStyleBackColor = false;
+            this.resizeButtonRun.Click += new System.EventHandler(this.resizeButtonRun_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(417, 269);
+            this.ClientSize = new System.Drawing.Size(497, 282);
             this.Controls.Add(this.AutoRename);
             this.Name = "Form1";
             this.Text = "AutoRename";
@@ -358,14 +359,14 @@
         private System.Windows.Forms.ProgressBar progBar;
         private System.Windows.Forms.Label outputLabel;
         private System.Windows.Forms.TextBox dirPath;
-        private System.Windows.Forms.Button buttonBrowse;
-        private System.Windows.Forms.Button buttonRun;
+        private System.Windows.Forms.Button renameButtonBrowse;
+        private System.Windows.Forms.Button renameButtonRun;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ProgressBar resizeProgBar;
         private System.Windows.Forms.Label resizeOutputLabel;
         private System.Windows.Forms.TextBox resizeDir;
         private System.Windows.Forms.Button resizeButtonBrowse;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button resizeButtonRun;
         private System.Windows.Forms.TextBox maxHeightText;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox maxWidthText;
@@ -373,7 +374,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox DestResizeDir;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button resizeDestBrwsButton;
     }
 }
 
