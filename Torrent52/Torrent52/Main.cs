@@ -48,10 +48,10 @@ namespace Torrent52
         }
 
         //--------------------------------------------------------------------
-        public void Start()
+        public void Start(string webUIUserName, string webUIPassword)
         {
             if (_torrentApi == null)
-                _torrentApi = new TorrentAPI();
+                _torrentApi = new TorrentAPI(webUIUserName, webUIPassword);
 
             if (_cleanupThread == null)
                 _cleanupThread = new Thread(new System.Threading.ThreadStart(CheckAndOrganize));
@@ -126,7 +126,7 @@ namespace Torrent52
                     List<Torrent> inProgressTorrents = new List<Torrent>();
                     DeleteCompletedTorrentJobs(ref inProgressTorrents);
                     MoveCompletedFiles(inProgressTorrents);
-                    UpdateFileNameStatus();
+                    //UpdateFileNameStatus();
                 }
                 catch (Exception e)
                 {
