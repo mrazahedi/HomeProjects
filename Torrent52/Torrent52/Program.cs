@@ -10,14 +10,16 @@ namespace Torrent52
         static void Main(string[] args)
         {
             bool errorFound = false;
-            if (args.Length != 5)
+            if (args.Length != 7)
             {
                 Console.WriteLine("Need to pass the following arguments: \n" +
                                     "Download root directory path - Ex: C:\\Downloads \n" +
                                     "Torrent download directory name in download root directory path - Ex: Misc \n" +
-                                    "File directory match accuracy - Ex: 0.8" +
-                                    "Auto close frequency in min - Ex: 5" +
-                                    "Torrent software path - Ex: C:\\Users\\Ali\\AppData\\Roaming\\uTorrent\\uTorrent.exe");
+                                    "File directory match accuracy - Ex: 0.8  \n" +
+                                    "Auto close frequency in min - Ex: 5  \n" +
+                                    "Torrent software path - Ex: C:\\Users\\Ali\\AppData\\Roaming\\uTorrent\\uTorrent.exe  \n" +
+                                    "Torrent webUI username \n" +
+                                    "Torrent webUI password \n");
                 errorFound = true;
             }
 
@@ -60,8 +62,8 @@ namespace Torrent52
                 main = new Main(args[0], args[1], accuracy, autoCloseFrequency, args[4]);
             }
 
-            //Main main = new Main("C:\\Downloads", "Misc", 0.8f);
-            main.Start();
+            if(!errorFound)
+                main.Start(args[5], args[6]);
         }
     }
 }

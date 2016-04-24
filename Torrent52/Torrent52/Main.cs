@@ -115,6 +115,12 @@ namespace Torrent52
         }
 
         //--------------------------------------------------------------------
+        private bool IsUTorrentRunning()
+        {
+            return Process.GetProcessesByName("utorrent").Length != 0;
+        }
+
+        //--------------------------------------------------------------------
         private void CheckAndOrganize()
         {
             while (_running)
@@ -138,6 +144,9 @@ namespace Torrent52
         //--------------------------------------------------------------------
         private void DeleteCompletedTorrentJobs(ref List<Torrent> inProgressTorrents)
         {
+            if (!IsUTorrentRunning())
+                return;
+
             List<Torrent> completedTorrentJobs = new List<Torrent>();
             List<Torrent> torrentsWithError = new List<Torrent>();
             TorrentCollection torrentCollection = _torrentApi.GetTorrentJobs();
