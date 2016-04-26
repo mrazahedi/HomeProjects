@@ -16,14 +16,19 @@ namespace Torrent52
         private readonly string NEW_DOWNLOADED_FILE_TAG = "---NEW-- ";
         private readonly List<int> OPEN_TORRENT_TIMES = new List<int>() { 3, 6, 9, 15, 18, 19, 20, 21, 22 };
 
+        private readonly string MOVIE_DIR_NAME = "Movies";
+        private readonly string TV_SERIES_DIR_NAME = "TV-Series";
+
         private System.Threading.Thread _cleanupThread;
         private System.Threading.Thread _torrentShutDownThread;
         TorrentAPI _torrentApi = null;
         private bool _running = false;
 
+        private string _uTorrentTempDirPath;
         private string _baseDirPath;
         private string _downloadDirPath;
         private string _movieDirPath;
+        private string _tvShowDirPath;
         private float _matchPercentage;
         private int _autoCloseFrequency;
 
@@ -31,11 +36,13 @@ namespace Torrent52
         private System.IO.StreamWriter _logFileStreamWriter = null;
 
         //--------------------------------------------------------------------
-        public Main(string baseDirPath, string downloadDirName, float matchPerc, int autoCloseFrequency, string torrentFilePath)
+        public Main(string uTorrentTempDirPath, string baseDirPath, string downloadDirName, float matchPerc, int autoCloseFrequency, string torrentFilePath)
         {
+            _uTorrentTempDirPath = uTorrentTempDirPath;
             _baseDirPath = baseDirPath;
             _downloadDirPath = _baseDirPath + Path.DirectorySeparatorChar + downloadDirName;
-            _movieDirPath = _baseDirPath + Path.DirectorySeparatorChar + "Movies";
+            _movieDirPath = _baseDirPath + Path.DirectorySeparatorChar + MOVIE_DIR_NAME;
+            _tvShowDirPath = _baseDirPath + Path.DirectorySeparatorChar + TV_SERIES_DIR_NAME;
             _matchPercentage = matchPerc;
             _autoCloseFrequency = autoCloseFrequency * 60 * 1000;
             _torrentFilePath = torrentFilePath;
@@ -130,6 +137,10 @@ namespace Torrent52
                 try
                 {
                     List<Torrent> inProgressTorrents = new List<Torrent>();
+
+                    if (inProgressTorrents.Count == 0)
+                        MoveFilesFromTempToFinalDownloadDir();
+
                     DeleteCompletedTorrentJobs(ref inProgressTorrents);
                     MoveCompletedFiles(inProgressTorrents);
                     //UpdateFileNameStatus();
@@ -138,6 +149,34 @@ namespace Torrent52
                 {
                     Console.Write("was not able to shutdown torrent - " + e.ToString());
                 }
+            }
+        }
+
+        //--------------------------------------------------------------------
+        //Sometimes we end up killing completed torrent jobs before uTorrent copy the file to the final destination
+        //If there is no torrent job running, scan the temp directory and move files to the final directory
+        private void MoveFilesFromTempToFinalDownloadDir()
+        {
+            if (!System.IO.Directory.Exists(_uTorrentTempDirPath))
+                return;
+
+            string[] directories = System.IO.Directory.GetDirectories(_uTorrentTempDirPath, "*", SearchOption.TopDirectoryOnly);
+            foreach (string srcPath in directories)
+            {
+                string destPath = _downloadDirPath + Path.DirectorySeparatorChar + GetDirectoryName(srcPath);
+                if (System.IO.Directory.Exists(destPath))
+                    destPath = GetNewNameForDirectory(destPath);
+
+                System.IO.Directory.Move(@srcPath, @destPath);
+            }
+
+            List<string> files = GetMovieFiles(_uTorrentTempDirPath, SearchOption.TopDirectoryOnly);
+
+            foreach (string srcPath in files)
+            {
+                string destPath = _downloadDirPath + Path.DirectorySeparatorChar + Path.GetFileName(srcPath);
+                if (!System.IO.File.Exists(destPath))
+                    System.IO.File.Move(@srcPath, @destPath);
             }
         }
 
@@ -192,7 +231,7 @@ namespace Torrent52
         {
             DateTime twoDaysAgo = DateTime.Now.AddDays(-3);
 
-            List<string> filePaths = GetMovieFiles(_movieDirPath);
+            List<string> filePaths = GetMovieFiles(_movieDirPath, SearchOption.AllDirectories);
             string[] directories = System.IO.Directory.GetDirectories(_baseDirPath, "*", SearchOption.AllDirectories);
             foreach (string dir in directories)
             {
@@ -216,7 +255,7 @@ namespace Torrent52
         private void MoveCompletedFiles(List<Torrent> inProgressTorrents)
         {
             List<string> filesToBeMoved = new List<string>();
-            List<string> filePaths = GetMovieFiles(_downloadDirPath);
+            List<string> filePaths = GetMovieFiles(_downloadDirPath, SearchOption.AllDirectories);
 
             foreach (string filePath in filePaths)
             {
@@ -231,11 +270,11 @@ namespace Torrent52
         }
 
         //--------------------------------------------------------------------
-        private List<string> GetMovieFiles(string baseDirPath)
+        private List<string> GetMovieFiles(string baseDirPath, SearchOption searchOption)
         {
             List<string> movies = new List<string>();
 
-            string[] filePaths = System.IO.Directory.GetFiles(_downloadDirPath, "*.*", SearchOption.AllDirectories);
+            string[] filePaths = System.IO.Directory.GetFiles(baseDirPath, "*.*", searchOption);
             foreach (string file in filePaths)
             {
                 string extension = Path.GetExtension(file).ToLower();
@@ -278,25 +317,22 @@ namespace Torrent52
             string fileDirPath = Path.GetDirectoryName(filePath);
             if (fileDirPath.Equals(_downloadDirPath))
             {
-                string destPath = destDirPath + Path.DirectorySeparatorChar + Path.GetFileName(filePath);
-                if (System.IO.File.Exists(destPath))
-                    System.IO.File.Delete(destPath);
+                //It is one file located in Download folder. Put the file in a folder with the same name
 
-                //It is one file located in Download folder. move the file
+                fileDirPath = fileDirPath + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(filePath);
+                System.IO.Directory.CreateDirectory(fileDirPath);
 
-                LogData("Moving file " + filePath + "  to  " + destPath);
-                System.IO.File.Move(@filePath, @destPath);
+                string newFilePath = fileDirPath + Path.DirectorySeparatorChar + Path.GetFileName(filePath);
+                LogData("Downloaded One File With no Folder - Created a DIR and moved the file to " + newFilePath);
+                System.IO.File.Move(@filePath, @newFilePath);
             }
-            else
-            {
-                string destPath = @destDirPath + Path.DirectorySeparatorChar + GetDirectoryName(fileDirPath);
-                if (System.IO.Directory.Exists(destPath))
-                    destPath = GetNewNameForDirectory(destPath);
 
-                //The file is inside another folder. Move the whole folder over
-                LogData("Moving directory " + filePath + "  to  " + destPath);
-                System.IO.Directory.Move(@fileDirPath, destPath);
-            }
+            string destPath = @destDirPath + Path.DirectorySeparatorChar + GetDirectoryName(fileDirPath);
+            if (System.IO.Directory.Exists(destPath))
+                destPath = GetNewNameForDirectory(destPath);
+
+            LogData("Moving directory " + filePath + "  to  " + destPath);
+            System.IO.Directory.Move(@fileDirPath, destPath);
         }
 
         //--------------------------------------------------------------------
@@ -315,15 +351,9 @@ namespace Torrent52
         //--------------------------------------------------------------------
         private string FindParentDir(string fileName)
         {
-            string[] directories = System.IO.Directory.GetDirectories(_baseDirPath, "*", SearchOption.AllDirectories);
+            string[] directories = System.IO.Directory.GetDirectories(_tvShowDirPath, "*", SearchOption.TopDirectoryOnly);
             foreach (string dir in directories)
             {
-                if (dir.ToLower().Contains(_downloadDirPath.ToLower()))
-                    continue;
-
-                if (dir.ToLower().Contains(_movieDirPath.ToLower()))
-                    continue;
-
                 if (FileNameMatch(fileName, GetDirectoryName(dir), _matchPercentage))
                     return dir;
             }

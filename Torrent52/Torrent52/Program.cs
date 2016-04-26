@@ -10,9 +10,10 @@ namespace Torrent52
         static void Main(string[] args)
         {
             bool errorFound = false;
-            if (args.Length != 7)
+            if (args.Length != 8)
             {
                 Console.WriteLine("Need to pass the following arguments: \n" +
+                                    "uTorrent temp download directory path - Ex: C:\\TorrentDownloads \n" +
                                     "Download root directory path - Ex: C:\\Downloads \n" +
                                     "Torrent download directory name in download root directory path - Ex: Misc \n" +
                                     "File directory match accuracy - Ex: 0.8  \n" +
@@ -26,7 +27,7 @@ namespace Torrent52
             float accuracy = 0.8f;
             try
             {
-                accuracy = System.Convert.ToSingle(args[2]);
+                accuracy = System.Convert.ToSingle(args[3]);
             }
             catch (Exception ex)
             {
@@ -37,7 +38,7 @@ namespace Torrent52
             int autoCloseFrequency = 5;
             try
             {
-                autoCloseFrequency = System.Convert.ToInt32(args[3]);
+                autoCloseFrequency = System.Convert.ToInt32(args[4]);
             }
             catch (Exception ex)
             {
@@ -45,7 +46,7 @@ namespace Torrent52
                 errorFound = true;
             }
 
-            if (!errorFound && string.IsNullOrEmpty(args[4]))
+            if (!errorFound && string.IsNullOrEmpty(args[5]))
             {
                 Console.WriteLine("Was not able to parse the fifth parameter that specifies the torrent file path ");
                 errorFound = true;
@@ -55,15 +56,15 @@ namespace Torrent52
             if (errorFound)
             {
                 Console.WriteLine("Default arguments will be used - C:\\Downloads Misc 0.8 5");
-                main = new Main("C:\\Downloads", "Misc", 0.8f, 5, @"C:\Users\Ali\AppData\Roaming\uTorrent\uTorrent.exe");
+                main = new Main("C:\\TorrentDownloads", "C:\\Downloads", "Misc", 0.8f, 5, @"C:\Users\Ali\AppData\Roaming\uTorrent\uTorrent.exe");
             }
             else
             {
-                main = new Main(args[0], args[1], accuracy, autoCloseFrequency, args[4]);
+                main = new Main(args[0], args[1], args[2], accuracy, autoCloseFrequency, args[5]);
             }
 
             if(!errorFound)
-                main.Start(args[5], args[6]);
+                main.Start(args[6], args[7]);
         }
     }
 }
