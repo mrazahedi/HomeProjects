@@ -35,9 +35,13 @@ namespace Torrent52
         private string _torrentFilePath = "";
         private System.IO.StreamWriter _logFileStreamWriter = null;
 
+        private Semaphore _semaphoreObject = null;
+
         //--------------------------------------------------------------------
         public Main(string uTorrentTempDirPath, string baseDirPath, string downloadDirName, float matchPerc, int autoCloseFrequency, string torrentFilePath)
         {
+             _semaphoreObject = new Semaphore(1, 1);
+
             _uTorrentTempDirPath = uTorrentTempDirPath;
             _baseDirPath = baseDirPath;
             _downloadDirPath = _baseDirPath + Path.DirectorySeparatorChar + downloadDirName;
@@ -102,7 +106,9 @@ namespace Torrent52
                         {
                             foreach (Process proc in Process.GetProcessesByName("utorrent"))
                             {
+                                _semaphoreObject.WaitOne();
                                 proc.Kill();
+                                _semaphoreObject.Release();
                             }
                         }
                     }
@@ -160,6 +166,7 @@ namespace Torrent52
             if (!System.IO.Directory.Exists(_uTorrentTempDirPath))
                 return;
 
+            _semaphoreObject.WaitOne();
             string[] directories = System.IO.Directory.GetDirectories(_uTorrentTempDirPath, "*", SearchOption.TopDirectoryOnly);
             foreach (string srcPath in directories)
             {
@@ -178,6 +185,7 @@ namespace Torrent52
                 if (!System.IO.File.Exists(destPath))
                     System.IO.File.Move(@srcPath, @destPath);
             }
+            _semaphoreObject.Release();
         }
 
         //--------------------------------------------------------------------
@@ -314,6 +322,7 @@ namespace Torrent52
                 return;
             }
 
+            _semaphoreObject.WaitOne();
             string fileDirPath = Path.GetDirectoryName(filePath);
             if (fileDirPath.Equals(_downloadDirPath))
             {
@@ -333,6 +342,7 @@ namespace Torrent52
 
             LogData("Moving directory " + filePath + "  to  " + destPath);
             System.IO.Directory.Move(@fileDirPath, destPath);
+            _semaphoreObject.Release();
         }
 
         //--------------------------------------------------------------------
@@ -352,17 +362,22 @@ namespace Torrent52
         private string FindParentDir(string fileName)
         {
             string[] directories = System.IO.Directory.GetDirectories(_tvShowDirPath, "*", SearchOption.TopDirectoryOnly);
+
+            string foundMatchDir = _movieDirPath;
+            float foundMatchPerc = 0f;
+
             foreach (string dir in directories)
             {
-                if (FileNameMatch(fileName, GetDirectoryName(dir), _matchPercentage))
-                    return dir;
+                float matchPerc = GetMatchPercentage(fileName, GetDirectoryName(dir));
+                if (matchPerc >= _matchPercentage && matchPerc >= foundMatchPerc)
+                    foundMatchDir = dir;
             }
 
-            return _movieDirPath;
+            return foundMatchDir;
         }
 
         //--------------------------------------------------------------------
-        private bool FileNameMatch(string fileName, string matchFileName, float matchPerc)
+        private float GetMatchPercentage(string fileName, string matchFileName)
         {
             string sanitizedFileName = SanitizeFileName(fileName);
             string[] matchFileNameWords = matchFileName.ToLower().Split(' ');
@@ -374,10 +389,7 @@ namespace Torrent52
                     totalMatchFound++;
             }
 
-            if (totalMatchFound / matchFileNameWords.Length >= matchPerc)
-                return true;
-
-            return false;
+            return totalMatchFound / matchFileNameWords.Length;
         }
 
         //--------------------------------------------------------------------
