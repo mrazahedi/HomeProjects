@@ -144,10 +144,11 @@ namespace Torrent52
                 {
                     List<Torrent> inProgressTorrents = new List<Torrent>();
 
+                    DeleteCompletedTorrentJobs(ref inProgressTorrents);
+
                     if (inProgressTorrents.Count == 0)
                         MoveFilesFromTempToFinalDownloadDir();
 
-                    DeleteCompletedTorrentJobs(ref inProgressTorrents);
                     MoveCompletedFiles(inProgressTorrents);
                     //UpdateFileNameStatus();
                 }

@@ -48,7 +48,7 @@ namespace Torrent52
         private void Connect()
         {
             if (TorrentIsRunning())
-                _client = new UTorrentClient(new System.Uri("http://localhost:54307/gui/"), _userName, _password);
+                _client = new UTorrentClient(new System.Uri("http://localhost:7070/gui/"), _userName, _password);
         }
     }
 }
