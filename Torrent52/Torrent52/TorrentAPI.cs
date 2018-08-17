@@ -13,11 +13,13 @@ namespace Torrent52
         UTorrentClient _client = null;
         private string _userName = string.Empty;
         private string _password = string.Empty;
+        private string _port = string.Empty;
 
-        public TorrentAPI(string userName, string password)
+        public TorrentAPI(string userName, string password, string port)
         {
             _userName = userName;
             _password = password;
+            _port = port.ToString();
 
             Connect();
         }
@@ -48,7 +50,7 @@ namespace Torrent52
         private void Connect()
         {
             if (TorrentIsRunning())
-                _client = new UTorrentClient(new System.Uri("http://localhost:7070/gui/"), _userName, _password);
+                _client = new UTorrentClient(new System.Uri("http://localhost:" + _port + "/gui/"), _userName, _password);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Torrent52
         static void Main(string[] args)
         {
             bool errorFound = false;
-            if (args.Length != 8)
+            if (args.Length != 9)
             {
                 Console.WriteLine("Need to pass the following arguments: \n" +
                                     "uTorrent temp download directory path - Ex: C:\\TorrentDownloads \n" +
@@ -20,7 +20,8 @@ namespace Torrent52
                                     "Auto close frequency in min - Ex: 5  \n" +
                                     "Torrent software path - Ex: C:\\Users\\Ali\\AppData\\Roaming\\uTorrent\\uTorrent.exe  \n" +
                                     "Torrent webUI username \n" +
-                                    "Torrent webUI password \n");
+                                    "Torrent webUI password \n" +
+                                    "port");
                 errorFound = true;
             }
 
@@ -64,7 +65,7 @@ namespace Torrent52
             }
 
             if(!errorFound)
-                main.Start(args[6], args[7]);
+                main.Start(args[6], args[7], args[8]);
         }
     }
 }

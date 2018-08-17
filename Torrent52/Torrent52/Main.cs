@@ -11,7 +11,7 @@ namespace Torrent52
 {
     class Main
     {
-        private readonly int CLEANUP_FREQ_MS = 15000;
+        private readonly int CLEANUP_FREQ_MS = 5000;
         private readonly string LOG_FILE_NAME = "DownloadLog.txt";
         private readonly string NEW_DOWNLOADED_FILE_TAG = "---NEW-- ";
         private readonly List<int> OPEN_TORRENT_TIMES = new List<int>() { 3, 6, 9, 15, 18, 19, 20, 21, 22 };
@@ -59,10 +59,10 @@ namespace Torrent52
         }
 
         //--------------------------------------------------------------------
-        public void Start(string webUIUserName, string webUIPassword)
+        public void Start(string webUIUserName, string webUIPassword, string port)
         {
             if (_torrentApi == null)
-                _torrentApi = new TorrentAPI(webUIUserName, webUIPassword);
+                _torrentApi = new TorrentAPI(webUIUserName, webUIPassword, port);
 
             if (_cleanupThread == null)
                 _cleanupThread = new Thread(new System.Threading.ThreadStart(CheckAndOrganize));
