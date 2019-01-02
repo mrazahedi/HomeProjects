@@ -12,7 +12,8 @@ namespace Torrent52
     class Main
     {
         private readonly int CLEANUP_FREQ_MS = 5000;
-        private readonly string LOG_FILE_NAME = "DownloadLog.txt";
+        private readonly string DOWNLOAD_LOG_FILE_NAME = "DownloadLog.txt";
+        private readonly string ERROR_LOG_FILE_NAME = "ErrorLog.txt";
         private readonly string NEW_DOWNLOADED_FILE_TAG = "---NEW-- ";
         private readonly List<int> OPEN_TORRENT_TIMES = new List<int>() { 3, 6, 9, 15, 18, 19, 20, 21, 22 };
 
@@ -33,14 +34,15 @@ namespace Torrent52
         private int _autoCloseFrequency;
 
         private string _torrentFilePath = "";
-        private System.IO.StreamWriter _logFileStreamWriter = null;
+        private System.IO.StreamWriter _downloadLogFileStreamWriter = null;
+        private System.IO.StreamWriter _errorLogFileStreamWriter = null;
 
-        private Semaphore _semaphoreObject = null;
+        private Mutex _mutextObj = null;
 
         //--------------------------------------------------------------------
         public Main(string uTorrentTempDirPath, string baseDirPath, string downloadDirName, float matchPerc, int autoCloseFrequency, string torrentFilePath)
         {
-             _semaphoreObject = new Semaphore(1, 1);
+            _mutextObj = new Mutex();
 
             _uTorrentTempDirPath = uTorrentTempDirPath;
             _baseDirPath = baseDirPath;
@@ -54,8 +56,11 @@ namespace Torrent52
 
         ~Main()
         {
-            if(_logFileStreamWriter != null)
-                _logFileStreamWriter.Close();
+            if(_downloadLogFileStreamWriter != null)
+                _downloadLogFileStreamWriter.Close();
+
+            if (_errorLogFileStreamWriter != null)
+                _errorLogFileStreamWriter.Close();
         }
 
         //--------------------------------------------------------------------
@@ -106,9 +111,9 @@ namespace Torrent52
                         {
                             foreach (Process proc in Process.GetProcessesByName("utorrent"))
                             {
-                                _semaphoreObject.WaitOne();
+                                _mutextObj.WaitOne();
                                 proc.Kill();
-                                _semaphoreObject.Release();
+                                _mutextObj.ReleaseMutex();
                             }
                         }
                     }
@@ -116,6 +121,7 @@ namespace Torrent52
                 catch (Exception e)
                 {
                     Console.Write("was not able to shutdown torrent - " + e.ToString());
+                    LogData("KillUTorrentIfAllDone - Error: " + e.ToString(), ERROR_LOG_FILE_NAME, ref _errorLogFileStreamWriter);
                 }
             }
         }
@@ -155,6 +161,7 @@ namespace Torrent52
                 catch (Exception e)
                 {
                     Console.Write("was not able to shutdown torrent - " + e.ToString());
+                    LogData("CheckAndOrganize - Error: " + e.ToString(), ERROR_LOG_FILE_NAME, ref _errorLogFileStreamWriter);
                 }
             }
         }
@@ -167,7 +174,7 @@ namespace Torrent52
             if (!System.IO.Directory.Exists(_uTorrentTempDirPath))
                 return;
 
-            _semaphoreObject.WaitOne();
+            _mutextObj.WaitOne();
             string[] directories = System.IO.Directory.GetDirectories(_uTorrentTempDirPath, "*", SearchOption.TopDirectoryOnly);
             foreach (string srcPath in directories)
             {
@@ -186,7 +193,7 @@ namespace Torrent52
                 if (!System.IO.File.Exists(destPath))
                     System.IO.File.Move(@srcPath, @destPath);
             }
-            _semaphoreObject.Release();
+            _mutextObj.ReleaseMutex();
         }
 
         //--------------------------------------------------------------------
@@ -213,7 +220,7 @@ namespace Torrent52
                 }
                 else if (/*torrent.Status == TorrentStatus.FinishedOrStopped && */torrent.ProgressInMils >= 1000)
                 {
-                    LogData("Downloaded " + torrent.Name);
+                    LogData("Downloaded " + torrent.Name, DOWNLOAD_LOG_FILE_NAME, ref _downloadLogFileStreamWriter);
                     completedTorrentJobs.Add(torrent);
                 }
                 else
@@ -224,13 +231,13 @@ namespace Torrent52
 
             foreach (Torrent torrent in completedTorrentJobs)
             {
-                LogData("Removing torrent from uTorrent: " + torrent.Name);
+                LogData("Removing torrent from uTorrent: " + torrent.Name, DOWNLOAD_LOG_FILE_NAME, ref _downloadLogFileStreamWriter);
                 torrentCollection.Remove(torrent);
             }
 
             foreach (Torrent torrent in torrentsWithError)
             {
-                LogData("Removing torrent because of error - Name: " + torrent.Name + " --- Error: " + torrent.StatusMessage);
+                LogData("Removing torrent because of error - Name: " + torrent.Name + " --- Error: " + torrent.StatusMessage, DOWNLOAD_LOG_FILE_NAME, ref _downloadLogFileStreamWriter);
                 torrentCollection.Remove(torrent);
             }
         }
@@ -323,7 +330,7 @@ namespace Torrent52
                 return;
             }
 
-            _semaphoreObject.WaitOne();
+            _mutextObj.WaitOne();
             string fileDirPath = Path.GetDirectoryName(filePath);
             if (fileDirPath.Equals(_downloadDirPath))
             {
@@ -333,7 +340,7 @@ namespace Torrent52
                 System.IO.Directory.CreateDirectory(fileDirPath);
 
                 string newFilePath = fileDirPath + Path.DirectorySeparatorChar + Path.GetFileName(filePath);
-                LogData("Downloaded One File With no Folder - Created a DIR and moved the file to " + newFilePath);
+                LogData("Downloaded One File With no Folder - Created a DIR and moved the file to " + newFilePath, DOWNLOAD_LOG_FILE_NAME, ref _downloadLogFileStreamWriter);
                 System.IO.File.Move(@filePath, @newFilePath);
             }
 
@@ -341,9 +348,9 @@ namespace Torrent52
             if (System.IO.Directory.Exists(destPath))
                 destPath = GetNewNameForDirectory(destPath);
 
-            LogData("Moving directory " + filePath + "  to  " + destPath);
+            LogData("Moving directory " + filePath + "  to  " + destPath, DOWNLOAD_LOG_FILE_NAME, ref _downloadLogFileStreamWriter);
             System.IO.Directory.Move(@fileDirPath, destPath);
-            _semaphoreObject.Release();
+            _mutextObj.ReleaseMutex();
         }
 
         //--------------------------------------------------------------------
@@ -394,13 +401,13 @@ namespace Torrent52
         }
 
         //--------------------------------------------------------------------
-        private void LogData(string message)
+        private void LogData(string message, string logFileName, ref System.IO.StreamWriter logFileStreamWriter)
         {
-            if(_logFileStreamWriter == null)
-                _logFileStreamWriter = new System.IO.StreamWriter(_baseDirPath + Path.DirectorySeparatorChar + LOG_FILE_NAME, true);
+            if(logFileStreamWriter == null)
+                logFileStreamWriter = new System.IO.StreamWriter(_baseDirPath + Path.DirectorySeparatorChar + logFileName, true);
 
-            _logFileStreamWriter.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " - " + message);
-            _logFileStreamWriter.Flush();
+            logFileStreamWriter.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " - " + message);
+            logFileStreamWriter.Flush();
         }
 
         //--------------------------------------------------------------------
