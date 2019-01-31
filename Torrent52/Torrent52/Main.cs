@@ -79,7 +79,7 @@ namespace Torrent52
             }
 
             if (_torrentShutDownThread == null)
-                _torrentShutDownThread = new Thread(new System.Threading.ThreadStart(KillUTorrentIfAllDone));
+                _torrentShutDownThread = new Thread(new System.Threading.ThreadStart(KillUTorrentThread));
 
             if (!_torrentShutDownThread.IsAlive)
                 _torrentShutDownThread.Start();
@@ -92,38 +92,44 @@ namespace Torrent52
         }
 
         //--------------------------------------------------------------------
-        private void KillUTorrentIfAllDone()
+        private void KillUTorrentThread()
         {
             while (_running)
             {
                 Thread.Sleep(_autoCloseFrequency);
-                try
+                KillUTorrentIfAllDone();
+            }
+        }
+
+        //--------------------------------------------------------------------
+        private void KillUTorrentIfAllDone()
+        {
+            _mutextObj.WaitOne();
+            try
+            {
+                if (ShouldTorrentRun())
                 {
-                    if (ShouldTorrentRun())
+                    if (Process.GetProcessesByName("utorrent").Count() == 0)
+                        System.Diagnostics.Process.Start(_torrentFilePath);
+                }
+                else
+                {
+                    TorrentCollection torrentCollection = _torrentApi.GetTorrentJobs();
+                    if (torrentCollection == null || torrentCollection.Count == 0)
                     {
-                        if (Process.GetProcessesByName("utorrent").Count() == 0)
-                            System.Diagnostics.Process.Start(_torrentFilePath);
-                    }
-                    else
-                    {
-                        TorrentCollection torrentCollection = _torrentApi.GetTorrentJobs();
-                        if (torrentCollection == null || torrentCollection.Count == 0)
+                        foreach (Process proc in Process.GetProcessesByName("utorrent"))
                         {
-                            foreach (Process proc in Process.GetProcessesByName("utorrent"))
-                            {
-                                _mutextObj.WaitOne();
-                                proc.Kill();
-                                _mutextObj.ReleaseMutex();
-                            }
+                            proc.Kill();   
                         }
                     }
                 }
-                catch (Exception e)
-                {
-                    Console.Write("was not able to shutdown torrent - " + e.ToString());
-                    LogData("KillUTorrentIfAllDone - Error: " + e.ToString(), ERROR_LOG_FILE_NAME, ref _errorLogFileStreamWriter);
-                }
             }
+            catch (Exception e)
+            {
+                Console.Write("was not able to shutdown torrent - " + e.ToString());
+                LogData("KillUTorrentIfAllDone - Error: " + e.ToString(), ERROR_LOG_FILE_NAME, ref _errorLogFileStreamWriter);
+            }
+            _mutextObj.ReleaseMutex();
         }
 
         //--------------------------------------------------------------------
@@ -146,23 +152,15 @@ namespace Torrent52
             {
                 Thread.Sleep(CLEANUP_FREQ_MS);
 
-                try
-                {
-                    List<Torrent> inProgressTorrents = new List<Torrent>();
+                List<Torrent> inProgressTorrents = new List<Torrent>();
 
-                    DeleteCompletedTorrentJobs(ref inProgressTorrents);
+                DeleteCompletedTorrentJobs(ref inProgressTorrents);
 
-                    if (inProgressTorrents.Count == 0)
-                        MoveFilesFromTempToFinalDownloadDir();
+                if (inProgressTorrents.Count == 0)
+                    MoveFilesFromTempToFinalDownloadDir();
 
-                    MoveCompletedFiles(inProgressTorrents);
-                    //UpdateFileNameStatus();
-                }
-                catch (Exception e)
-                {
-                    Console.Write("was not able to shutdown torrent - " + e.ToString());
-                    LogData("CheckAndOrganize - Error: " + e.ToString(), ERROR_LOG_FILE_NAME, ref _errorLogFileStreamWriter);
-                }
+                MoveCompletedFiles(inProgressTorrents);
+                //UpdateFileNameStatus();
             }
         }
 
@@ -171,27 +169,35 @@ namespace Torrent52
         //If there is no torrent job running, scan the temp directory and move files to the final directory
         private void MoveFilesFromTempToFinalDownloadDir()
         {
-            if (!System.IO.Directory.Exists(_uTorrentTempDirPath))
-                return;
-
             _mutextObj.WaitOne();
-            string[] directories = System.IO.Directory.GetDirectories(_uTorrentTempDirPath, "*", SearchOption.TopDirectoryOnly);
-            foreach (string srcPath in directories)
+            try
             {
-                string destPath = _downloadDirPath + Path.DirectorySeparatorChar + GetDirectoryName(srcPath);
-                if (System.IO.Directory.Exists(destPath))
-                    destPath = GetNewNameForDirectory(destPath);
+                if (!System.IO.Directory.Exists(_uTorrentTempDirPath))
+                    return;
 
-                System.IO.Directory.Move(@srcPath, @destPath);
+                string[] directories = System.IO.Directory.GetDirectories(_uTorrentTempDirPath, "*", SearchOption.TopDirectoryOnly);
+                foreach (string srcPath in directories)
+                {
+                    string destPath = _downloadDirPath + Path.DirectorySeparatorChar + GetDirectoryName(srcPath);
+                    if (System.IO.Directory.Exists(destPath))
+                        destPath = GetNewNameForDirectory(destPath);
+
+                    System.IO.Directory.Move(@srcPath, @destPath);
+                }
+
+                List<string> files = GetMovieFiles(_uTorrentTempDirPath, SearchOption.TopDirectoryOnly);
+
+                foreach (string srcPath in files)
+                {
+                    string destPath = _downloadDirPath + Path.DirectorySeparatorChar + Path.GetFileName(srcPath);
+                    if (!System.IO.File.Exists(destPath))
+                        System.IO.File.Move(@srcPath, @destPath);
+                }
             }
-
-            List<string> files = GetMovieFiles(_uTorrentTempDirPath, SearchOption.TopDirectoryOnly);
-
-            foreach (string srcPath in files)
+            catch (Exception e)
             {
-                string destPath = _downloadDirPath + Path.DirectorySeparatorChar + Path.GetFileName(srcPath);
-                if (!System.IO.File.Exists(destPath))
-                    System.IO.File.Move(@srcPath, @destPath);
+                Console.Write("was not able to move files from temp to final directory - " + e.ToString());
+                LogData("MoveFilesFromTempToFinalDownloadDir - Error: " + e.ToString(), ERROR_LOG_FILE_NAME, ref _errorLogFileStreamWriter);
             }
             _mutextObj.ReleaseMutex();
         }
@@ -199,46 +205,54 @@ namespace Torrent52
         //--------------------------------------------------------------------
         private void DeleteCompletedTorrentJobs(ref List<Torrent> inProgressTorrents)
         {
-            if (!IsUTorrentRunning())
-                return;
-
-            List<Torrent> completedTorrentJobs = new List<Torrent>();
-            List<Torrent> torrentsWithError = new List<Torrent>();
-            TorrentCollection torrentCollection = _torrentApi.GetTorrentJobs();
-
-            if (torrentCollection == null)
-                return;
-
-            foreach (Torrent torrent in torrentCollection)
+            try
             {
-                if (torrent == null)
-                    continue;
+                if (!IsUTorrentRunning())
+                    return;
 
-                if (torrent.Status == TorrentStatus.Error)
+                List<Torrent> completedTorrentJobs = new List<Torrent>();
+                List<Torrent> torrentsWithError = new List<Torrent>();
+                TorrentCollection torrentCollection = _torrentApi.GetTorrentJobs();
+
+                if (torrentCollection == null)
+                    return;
+
+                foreach (Torrent torrent in torrentCollection)
                 {
-                    torrentsWithError.Add(torrent);
+                    if (torrent == null)
+                        continue;
+
+                    if (torrent.Status == TorrentStatus.Error)
+                    {
+                        torrentsWithError.Add(torrent);
+                    }
+                    else if (/*torrent.Status == TorrentStatus.FinishedOrStopped && */torrent.ProgressInMils >= 1000)
+                    {
+                        LogData("Downloaded " + torrent.Name, DOWNLOAD_LOG_FILE_NAME, ref _downloadLogFileStreamWriter);
+                        completedTorrentJobs.Add(torrent);
+                    }
+                    else
+                    {
+                        inProgressTorrents.Add(torrent);
+                    }
                 }
-                else if (/*torrent.Status == TorrentStatus.FinishedOrStopped && */torrent.ProgressInMils >= 1000)
+
+                foreach (Torrent torrent in completedTorrentJobs)
                 {
-                    LogData("Downloaded " + torrent.Name, DOWNLOAD_LOG_FILE_NAME, ref _downloadLogFileStreamWriter);
-                    completedTorrentJobs.Add(torrent);
+                    LogData("Removing torrent from uTorrent: " + torrent.Name, DOWNLOAD_LOG_FILE_NAME, ref _downloadLogFileStreamWriter);
+                    torrentCollection.Remove(torrent);
                 }
-                else
+
+                foreach (Torrent torrent in torrentsWithError)
                 {
-                    inProgressTorrents.Add(torrent);
+                    LogData("Removing torrent because of error - Name: " + torrent.Name + " --- Error: " + torrent.StatusMessage, DOWNLOAD_LOG_FILE_NAME, ref _downloadLogFileStreamWriter);
+                    torrentCollection.Remove(torrent);
                 }
             }
-
-            foreach (Torrent torrent in completedTorrentJobs)
+            catch (Exception e)
             {
-                LogData("Removing torrent from uTorrent: " + torrent.Name, DOWNLOAD_LOG_FILE_NAME, ref _downloadLogFileStreamWriter);
-                torrentCollection.Remove(torrent);
-            }
-
-            foreach (Torrent torrent in torrentsWithError)
-            {
-                LogData("Removing torrent because of error - Name: " + torrent.Name + " --- Error: " + torrent.StatusMessage, DOWNLOAD_LOG_FILE_NAME, ref _downloadLogFileStreamWriter);
-                torrentCollection.Remove(torrent);
+                Console.Write("was not able to delete completed torrent jobs - " + e.ToString());
+                LogData("DeleteCompletedTorrentJobs - Error: " + e.ToString(), ERROR_LOG_FILE_NAME, ref _errorLogFileStreamWriter);
             }
         }
 
@@ -270,19 +284,30 @@ namespace Torrent52
         //--------------------------------------------------------------------
         private void MoveCompletedFiles(List<Torrent> inProgressTorrents)
         {
-            List<string> filesToBeMoved = new List<string>();
-            List<string> filePaths = GetMovieFiles(_downloadDirPath, SearchOption.AllDirectories);
-
-            foreach (string filePath in filePaths)
+            try
             {
-                if (FindMatchingTorrent(inProgressTorrents, filePath) == null)
-                {
-                    filesToBeMoved.Add(filePath);
-                }
-            }
+                List<string> filesToBeMoved = new List<string>();
+                List<string> filePaths = GetMovieFiles(_downloadDirPath, SearchOption.AllDirectories);
 
-            foreach (string filePath in filesToBeMoved)
-                MoveFileToDirAndCleanup(filePath);
+                foreach (string filePath in filePaths)
+                {
+                    if (FindMatchingTorrent(inProgressTorrents, filePath) == null)
+                    {
+                        filesToBeMoved.Add(filePath);
+                    }
+                }
+
+                foreach (string filePath in filesToBeMoved)
+                    MoveFileToDirAndCleanup(filePath);
+            }
+            catch (Exception e)
+            {
+                Console.Write("was not able to move completed files - " + e.ToString());
+                LogData("MoveCompletedFiles - Error: " + e.ToString(), ERROR_LOG_FILE_NAME, ref _errorLogFileStreamWriter);
+
+                //There is a chance a uTorrent process is hanging on to the files. Kill it if there is no active torrent
+                KillUTorrentIfAllDone();
+            }
         }
 
         //--------------------------------------------------------------------
