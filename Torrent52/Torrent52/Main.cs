@@ -142,7 +142,11 @@ namespace Torrent52
         //--------------------------------------------------------------------
         private bool IsUTorrentRunning()
         {
-            return Process.GetProcessesByName("utorrent").Length != 0;
+            if (Process.GetProcessesByName("utorrent").Length == 0)
+                return false;
+
+            TorrentCollection torrentCollection = _torrentApi.GetTorrentJobs();
+            return (torrentCollection != null && torrentCollection.Count > 0);
         }
 
         //--------------------------------------------------------------------
@@ -214,7 +218,7 @@ namespace Torrent52
                 List<Torrent> torrentsWithError = new List<Torrent>();
                 TorrentCollection torrentCollection = _torrentApi.GetTorrentJobs();
 
-                if (torrentCollection == null)
+                if (torrentCollection == null || torrentCollection.Count == 0)
                     return;
 
                 foreach (Torrent torrent in torrentCollection)
@@ -251,6 +255,8 @@ namespace Torrent52
             }
             catch (Exception e)
             {
+                if(e.ToString().ToLower().Contains("there was no end point"))
+
                 Console.Write("was not able to delete completed torrent jobs - " + e.ToString());
                 LogData("DeleteCompletedTorrentJobs - Error: " + e.ToString(), ERROR_LOG_FILE_NAME, ref _errorLogFileStreamWriter);
             }

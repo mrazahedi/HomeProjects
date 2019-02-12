@@ -78,8 +78,15 @@ namespace UTorrentAPI.Protocol
             if (channel == null)
                 return "";
 
-            this.token = (string)channel.GetType().InvokeMember(this.tokenOperation, publicInstanceMethod, null, channel, null);
-            this.tokenLastUpdate = DateTime.Now;
+            try
+            {
+                this.token = (string)channel.GetType().InvokeMember(this.tokenOperation, publicInstanceMethod, null, channel, null);
+                this.tokenLastUpdate = DateTime.Now;
+            }
+            catch (Exception e)
+            {
+                return "";
+            }
 
             return this.token;
         }
