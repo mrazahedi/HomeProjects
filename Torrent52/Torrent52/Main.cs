@@ -102,12 +102,12 @@ namespace Torrent52
         }
 
         //--------------------------------------------------------------------
-        private void KillUTorrentIfAllDone()
+        private void KillUTorrentIfAllDone(bool forceKill = false)
         {
             _mutextObj.WaitOne();
             try
             {
-                if (ShouldTorrentRun())
+                if (!forceKill && ShouldTorrentRun())
                 {
                     if (Process.GetProcessesByName("utorrent").Count() == 0)
                         System.Diagnostics.Process.Start(_torrentFilePath);
@@ -306,7 +306,7 @@ namespace Torrent52
                 LogData("MoveCompletedFiles - Error: " + e.ToString(), ERROR_LOG_FILE_NAME, ref _errorLogFileStreamWriter);
 
                 //There is a chance a uTorrent process is hanging on to the files. Kill it if there is no active torrent
-                KillUTorrentIfAllDone();
+                KillUTorrentIfAllDone(true);
             }
         }
 
