@@ -27,3 +27,5 @@ Torrent52/Torrent52/bin/
 Torrent52/Torrent52/obj/
 Torrent52/Torrent52/Torrent52_BACKUP_BAT.txt
 AutoRenameFiles/AutoRenameFiles/app.config
+*.vspx
+*.psess
