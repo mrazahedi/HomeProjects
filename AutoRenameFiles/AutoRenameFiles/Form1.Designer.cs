@@ -55,9 +55,17 @@
             this.resizeDir = new System.Windows.Forms.TextBox();
             this.resizeButtonBrowse = new System.Windows.Forms.Button();
             this.resizeButtonRun = new System.Windows.Forms.Button();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.flattenDir = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.flattenFilesOutputLabel = new System.Windows.Forms.Label();
+            this.deleteEmptyDirs = new System.Windows.Forms.CheckBox();
             this.AutoRename.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // AutoRename
@@ -66,6 +74,7 @@
             this.AutoRename.AccessibleName = "";
             this.AutoRename.Controls.Add(this.tabPage1);
             this.AutoRename.Controls.Add(this.tabPage2);
+            this.AutoRename.Controls.Add(this.tabPage3);
             this.AutoRename.Location = new System.Drawing.Point(3, 1);
             this.AutoRename.Name = "AutoRename";
             this.AutoRename.SelectedIndex = 0;
@@ -329,6 +338,78 @@
             this.resizeButtonRun.UseVisualStyleBackColor = false;
             this.resizeButtonRun.Click += new System.EventHandler(this.resizeButtonRun_Click);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.deleteEmptyDirs);
+            this.tabPage3.Controls.Add(this.flattenFilesOutputLabel);
+            this.tabPage3.Controls.Add(this.label5);
+            this.tabPage3.Controls.Add(this.flattenDir);
+            this.tabPage3.Controls.Add(this.button1);
+            this.tabPage3.Controls.Add(this.button2);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(484, 253);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Flatten";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // flattenDir
+            // 
+            this.flattenDir.Location = new System.Drawing.Point(35, 51);
+            this.flattenDir.Name = "flattenDir";
+            this.flattenDir.Size = new System.Drawing.Size(241, 20);
+            this.flattenDir.TabIndex = 15;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(316, 48);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 14;
+            this.button1.Text = "Browse";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.LightGreen;
+            this.button2.Location = new System.Drawing.Point(316, 88);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 13;
+            this.button2.Text = "Run";
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(32, 17);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(197, 13);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "This will put all files in the selected folder";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
+            // 
+            // flattenFilesOutputLabel
+            // 
+            this.flattenFilesOutputLabel.AutoSize = true;
+            this.flattenFilesOutputLabel.Location = new System.Drawing.Point(32, 107);
+            this.flattenFilesOutputLabel.Name = "flattenFilesOutputLabel";
+            this.flattenFilesOutputLabel.Size = new System.Drawing.Size(138, 13);
+            this.flattenFilesOutputLabel.TabIndex = 19;
+            this.flattenFilesOutputLabel.Text = "Please choose the directory";
+            // 
+            // deleteEmptyDirs
+            // 
+            this.deleteEmptyDirs.AutoSize = true;
+            this.deleteEmptyDirs.Location = new System.Drawing.Point(316, 127);
+            this.deleteEmptyDirs.Name = "deleteEmptyDirs";
+            this.deleteEmptyDirs.Size = new System.Drawing.Size(142, 17);
+            this.deleteEmptyDirs.TabIndex = 20;
+            this.deleteEmptyDirs.Text = "Delete Empty Directories";
+            this.deleteEmptyDirs.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -342,6 +423,8 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -375,6 +458,13 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox DestResizeDir;
         private System.Windows.Forms.Button resizeDestBrwsButton;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox flattenDir;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label flattenFilesOutputLabel;
+        private System.Windows.Forms.CheckBox deleteEmptyDirs;
     }
 }
 

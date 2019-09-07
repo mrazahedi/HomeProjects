@@ -213,6 +213,61 @@ namespace AutoRenameFiles
         }
 
         //-----------------------------------------------------------------------------
+        public void FlattenFiles(string flattenDirPath)
+        {
+            if (!Directory.Exists(flattenDirPath))
+            {
+                flattenFilesOutputLabel.ForeColor = Color.Red;
+                flattenFilesOutputLabel.Text = "Invalid source directory path";
+                return;
+            }
+
+
+            flattenFilesOutputLabel.ForeColor = Color.Black;
+
+            List<string> allFilePaths = new List<string>(Directory.GetFiles(flattenDirPath));
+            string[] allDirectories = Directory.GetDirectories(flattenDirPath, "*", SearchOption.AllDirectories);
+            foreach (string directoryPath in allDirectories)
+            {
+                allFilePaths.AddRange(Directory.GetFiles(directoryPath));
+            }
+
+            resizeProgBar.Value = 0;
+            resizeProgBar.Maximum = allFilePaths.Count();
+
+            new Thread(new ThreadStart(() =>
+            {
+                foreach (string filePath in allFilePaths)
+                {
+                    string newPath = Path.Combine(flattenDirPath, Path.GetFileName(filePath));
+                    System.IO.File.Move(filePath, newPath );
+                    resizeProgBar.BeginInvoke(new Action(() =>
+                    {
+                        resizeProgBar.PerformStep();
+                    }));
+                }
+
+                flattenFilesOutputLabel.BeginInvoke(new Action(() =>
+                {
+                    flattenFilesOutputLabel.ForeColor = Color.Green;
+                    flattenFilesOutputLabel.Text = "Completed";
+                }));
+
+                if (deleteEmptyDirs.Checked)
+                {
+                    foreach (string directoryPath in allDirectories)
+                    {
+                        if (Directory.GetFiles(directoryPath).Count() == 0)
+                        {
+                            Directory.Delete(directoryPath);
+                        }
+                    }
+                }
+
+            })).Start();
+        }
+
+        //-----------------------------------------------------------------------------
         public void ResizeImage(int maxWidth, int maxHeight, string path, string rootDirPath, string DestDirPath)
         {
             var image = System.Drawing.Image.FromFile(path);
@@ -274,6 +329,27 @@ namespace AutoRenameFiles
             if (folderBrowser.ShowDialog() == DialogResult.OK)
             {
                 DestResizeDir.Text = folderBrowser.SelectedPath;
+            }
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            FlattenFiles(flattenDir.Text);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
+            folderBrowser.SelectedPath = resizeDir.Text;
+
+            if (folderBrowser.ShowDialog() == DialogResult.OK)
+            {
+                flattenDir.Text = folderBrowser.SelectedPath;
             }
         }
     }
