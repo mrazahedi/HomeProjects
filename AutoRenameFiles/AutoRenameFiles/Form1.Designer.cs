@@ -56,16 +56,23 @@
             this.resizeButtonBrowse = new System.Windows.Forms.Button();
             this.resizeButtonRun = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.deleteEmptyDirs = new System.Windows.Forms.CheckBox();
+            this.flattenFilesOutputLabel = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.flattenDir = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.flattenFilesOutputLabel = new System.Windows.Forms.Label();
-            this.deleteEmptyDirs = new System.Windows.Forms.CheckBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label6 = new System.Windows.Forms.Label();
+            this.dupeDir = new System.Windows.Forms.TextBox();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.dupeLabel = new System.Windows.Forms.Label();
             this.AutoRename.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // AutoRename
@@ -75,6 +82,7 @@
             this.AutoRename.Controls.Add(this.tabPage1);
             this.AutoRename.Controls.Add(this.tabPage2);
             this.AutoRename.Controls.Add(this.tabPage3);
+            this.AutoRename.Controls.Add(this.tabPage4);
             this.AutoRename.Location = new System.Drawing.Point(3, 1);
             this.AutoRename.Name = "AutoRename";
             this.AutoRename.SelectedIndex = 0;
@@ -353,6 +361,35 @@
             this.tabPage3.Text = "Flatten";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // deleteEmptyDirs
+            // 
+            this.deleteEmptyDirs.AutoSize = true;
+            this.deleteEmptyDirs.Location = new System.Drawing.Point(316, 127);
+            this.deleteEmptyDirs.Name = "deleteEmptyDirs";
+            this.deleteEmptyDirs.Size = new System.Drawing.Size(142, 17);
+            this.deleteEmptyDirs.TabIndex = 20;
+            this.deleteEmptyDirs.Text = "Delete Empty Directories";
+            this.deleteEmptyDirs.UseVisualStyleBackColor = true;
+            // 
+            // flattenFilesOutputLabel
+            // 
+            this.flattenFilesOutputLabel.AutoSize = true;
+            this.flattenFilesOutputLabel.Location = new System.Drawing.Point(32, 107);
+            this.flattenFilesOutputLabel.Name = "flattenFilesOutputLabel";
+            this.flattenFilesOutputLabel.Size = new System.Drawing.Size(138, 13);
+            this.flattenFilesOutputLabel.TabIndex = 19;
+            this.flattenFilesOutputLabel.Text = "Please choose the directory";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(32, 17);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(197, 13);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "This will put all files in the selected folder";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
+            // 
             // flattenDir
             // 
             this.flattenDir.Location = new System.Drawing.Point(35, 51);
@@ -381,34 +418,66 @@
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // label5
+            // tabPage4
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(32, 17);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(197, 13);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "This will put all files in the selected folder";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
+            this.tabPage4.Controls.Add(this.dupeLabel);
+            this.tabPage4.Controls.Add(this.label6);
+            this.tabPage4.Controls.Add(this.dupeDir);
+            this.tabPage4.Controls.Add(this.button3);
+            this.tabPage4.Controls.Add(this.button4);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(484, 253);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Duplicates";
+            this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // flattenFilesOutputLabel
+            // label6
             // 
-            this.flattenFilesOutputLabel.AutoSize = true;
-            this.flattenFilesOutputLabel.Location = new System.Drawing.Point(32, 107);
-            this.flattenFilesOutputLabel.Name = "flattenFilesOutputLabel";
-            this.flattenFilesOutputLabel.Size = new System.Drawing.Size(138, 13);
-            this.flattenFilesOutputLabel.TabIndex = 19;
-            this.flattenFilesOutputLabel.Text = "Please choose the directory";
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(28, 22);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(149, 13);
+            this.label6.TabIndex = 20;
+            this.label6.Text = "This will remove duplicate files";
             // 
-            // deleteEmptyDirs
+            // dupeDir
             // 
-            this.deleteEmptyDirs.AutoSize = true;
-            this.deleteEmptyDirs.Location = new System.Drawing.Point(316, 127);
-            this.deleteEmptyDirs.Name = "deleteEmptyDirs";
-            this.deleteEmptyDirs.Size = new System.Drawing.Size(142, 17);
-            this.deleteEmptyDirs.TabIndex = 20;
-            this.deleteEmptyDirs.Text = "Delete Empty Directories";
-            this.deleteEmptyDirs.UseVisualStyleBackColor = true;
+            this.dupeDir.Location = new System.Drawing.Point(31, 56);
+            this.dupeDir.Name = "dupeDir";
+            this.dupeDir.Size = new System.Drawing.Size(241, 20);
+            this.dupeDir.TabIndex = 19;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(312, 53);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 18;
+            this.button3.Text = "Browse";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // button4
+            // 
+            this.button4.BackColor = System.Drawing.Color.LightGreen;
+            this.button4.Location = new System.Drawing.Point(312, 93);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 17;
+            this.button4.Text = "Run";
+            this.button4.UseVisualStyleBackColor = false;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // dupeLabel
+            // 
+            this.dupeLabel.AutoSize = true;
+            this.dupeLabel.Location = new System.Drawing.Point(28, 98);
+            this.dupeLabel.Name = "dupeLabel";
+            this.dupeLabel.Size = new System.Drawing.Size(138, 13);
+            this.dupeLabel.TabIndex = 21;
+            this.dupeLabel.Text = "Please choose the directory";
             // 
             // Form1
             // 
@@ -425,6 +494,8 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -465,6 +536,12 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label flattenFilesOutputLabel;
         private System.Windows.Forms.CheckBox deleteEmptyDirs;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.Label dupeLabel;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox dupeDir;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
     }
 }
 

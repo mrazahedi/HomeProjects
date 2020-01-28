@@ -213,6 +213,68 @@ namespace AutoRenameFiles
         }
 
         //-----------------------------------------------------------------------------
+        public void RemoveDuplicates(string rootDirPath)
+        {
+            if (!Directory.Exists(rootDirPath))
+            {
+                dupeLabel.ForeColor = Color.Red;
+                dupeLabel.Text = "Invalid source directory path";
+                return;
+            }
+
+            dupeLabel.ForeColor = Color.Black;
+
+            List<string> allFilePaths = new List<string>(Directory.GetFiles(rootDirPath));
+            string[] allDirectories = Directory.GetDirectories(rootDirPath, "*", SearchOption.AllDirectories);
+            foreach (string directoryPath in allDirectories)
+            {
+                allFilePaths.AddRange(Directory.GetFiles(directoryPath));
+            }
+
+            allFilePaths.Sort();
+
+            List<string> filesToBeDeleted = new List<string>();
+
+            foreach (string filePath in allFilePaths)
+            {
+                string DupeFileName = System.IO.Path.GetFileNameWithoutExtension(filePath) + "_1";
+
+                string DupeFilePath = System.IO.Path.GetDirectoryName(filePath) +
+                                        System.IO.Path.DirectorySeparatorChar +
+                                        DupeFileName +
+                                        System.IO.Path.GetExtension(filePath);
+
+                if (allFilePaths.Contains(DupeFilePath, StringComparer.OrdinalIgnoreCase))
+                {
+                    filesToBeDeleted.Add(DupeFilePath);
+                }
+            }
+
+            resizeProgBar.Value = 0;
+            resizeProgBar.Maximum = allFilePaths.Count();
+
+            new Thread(new ThreadStart(() =>
+            {
+                foreach (string filePath in filesToBeDeleted)
+                {
+                    dupeLabel.BeginInvoke(new Action(() =>
+                    {
+                        dupeLabel.Text = "Resizing " + filePath;
+                    }));
+
+                    File.Delete(filePath);
+                }
+
+                dupeLabel.BeginInvoke(new Action(() =>
+                {
+                    dupeLabel.ForeColor = Color.Green;
+                    dupeLabel.Text = "Completed. Total Files deleted: " + filesToBeDeleted.Count;
+                }));
+
+            })).Start();
+        }
+
+        //-----------------------------------------------------------------------------
         public void FlattenFiles(string flattenDirPath)
         {
             if (!Directory.Exists(flattenDirPath))
@@ -351,6 +413,22 @@ namespace AutoRenameFiles
             {
                 flattenDir.Text = folderBrowser.SelectedPath;
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
+            folderBrowser.SelectedPath = resizeDir.Text;
+
+            if (folderBrowser.ShowDialog() == DialogResult.OK)
+            {
+                dupeDir.Text = folderBrowser.SelectedPath;
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            RemoveDuplicates(dupeDir.Text);
         }
     }
 }
