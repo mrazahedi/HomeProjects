@@ -68,6 +68,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.dupeLabel = new System.Windows.Forms.Label();
+            this.NumberOnDateCheckbox = new System.Windows.Forms.CheckBox();
             this.AutoRename.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -92,6 +93,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.NumberOnDateCheckbox);
             this.tabPage1.Controls.Add(this.checkbox_everything);
             this.tabPage1.Controls.Add(this.checkbox_video);
             this.tabPage1.Controls.Add(this.checkbox_image);
@@ -479,6 +481,16 @@
             this.dupeLabel.TabIndex = 21;
             this.dupeLabel.Text = "Please choose the directory";
             // 
+            // NumberOnDateCheckbox
+            // 
+            this.NumberOnDateCheckbox.AutoSize = true;
+            this.NumberOnDateCheckbox.Location = new System.Drawing.Point(277, 161);
+            this.NumberOnDateCheckbox.Name = "NumberOnDateCheckbox";
+            this.NumberOnDateCheckbox.Size = new System.Drawing.Size(136, 17);
+            this.NumberOnDateCheckbox.TabIndex = 20;
+            this.NumberOnDateCheckbox.Text = "Number based on Date";
+            this.NumberOnDateCheckbox.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -542,6 +554,7 @@
         private System.Windows.Forms.TextBox dupeDir;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.CheckBox NumberOnDateCheckbox;
     }
 }
 

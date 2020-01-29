@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Threading;
+using System.Collections;
+using System.Drawing.Imaging;
 
 namespace AutoRenameFiles
 {
@@ -29,6 +31,25 @@ namespace AutoRenameFiles
             ".mp4",
         };
 
+        public class CreationDateComparer : IComparer
+        {
+            // Call CaseInsensitiveComparer.Compare with the parameters reversed.
+            public int Compare(object x, object y)
+            {
+                return GetDateTakenFromImage((string)x).CompareTo(GetDateTakenFromImage((string)y));
+            }
+
+            public DateTime GetDateTakenFromImage(string path)
+            {
+                System.Drawing.Image myImage = Image.FromFile(path);
+                System.Drawing.Imaging.PropertyItem propItem = myImage.GetPropertyItem(36867);
+                string dateTaken = new System.Text.RegularExpressions.Regex(":").Replace(System.Text.Encoding.UTF8.GetString(propItem.Value), "-", 2);
+                myImage.Dispose();
+                return System.DateTime.Parse(dateTaken);
+            }
+        }
+
+       
         //-----------------------------------------------------------------------------
         public Form1()
         {
@@ -108,6 +129,12 @@ namespace AutoRenameFiles
         //-----------------------------------------------------------------------------
         public void RenameFiles(string[] filePaths, string prefix, string specialPrefix, bool useSpace)
         {
+            if (NumberOnDateCheckbox.Checked)
+            {
+                CreationDateComparer comparer = new CreationDateComparer();
+                Array.Sort(filePaths, comparer);
+            }
+
             int postfixDigit = 1;
             string nameDigitSpace = useSpace ? " " : "";
             foreach (string filePath in filePaths)
