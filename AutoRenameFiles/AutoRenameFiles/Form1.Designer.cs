@@ -31,6 +31,9 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.AutoRename = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.DescRadioButton = new System.Windows.Forms.RadioButton();
+            this.AscRadioButton = new System.Windows.Forms.RadioButton();
+            this.NumberOnDateCheckbox = new System.Windows.Forms.CheckBox();
             this.checkbox_everything = new System.Windows.Forms.CheckBox();
             this.checkbox_video = new System.Windows.Forms.CheckBox();
             this.checkbox_image = new System.Windows.Forms.CheckBox();
@@ -63,12 +66,11 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.dupeLabel = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.dupeDir = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.dupeLabel = new System.Windows.Forms.Label();
-            this.NumberOnDateCheckbox = new System.Windows.Forms.CheckBox();
             this.AutoRename.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -93,6 +95,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.DescRadioButton);
+            this.tabPage1.Controls.Add(this.AscRadioButton);
             this.tabPage1.Controls.Add(this.NumberOnDateCheckbox);
             this.tabPage1.Controls.Add(this.checkbox_everything);
             this.tabPage1.Controls.Add(this.checkbox_video);
@@ -111,6 +115,40 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Rename";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // DescRadioButton
+            // 
+            this.DescRadioButton.AutoSize = true;
+            this.DescRadioButton.Location = new System.Drawing.Point(82, 160);
+            this.DescRadioButton.Name = "DescRadioButton";
+            this.DescRadioButton.Size = new System.Drawing.Size(50, 17);
+            this.DescRadioButton.TabIndex = 22;
+            this.DescRadioButton.TabStop = true;
+            this.DescRadioButton.Text = "Desc";
+            this.DescRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // AscRadioButton
+            // 
+            this.AscRadioButton.AutoSize = true;
+            this.AscRadioButton.Location = new System.Drawing.Point(33, 160);
+            this.AscRadioButton.Name = "AscRadioButton";
+            this.AscRadioButton.Size = new System.Drawing.Size(43, 17);
+            this.AscRadioButton.TabIndex = 21;
+            this.AscRadioButton.TabStop = true;
+            this.AscRadioButton.Text = "Asc";
+            this.AscRadioButton.UseVisualStyleBackColor = true;
+            this.AscRadioButton.CheckedChanged += new System.EventHandler(this.AscRadioButton_CheckedChanged);
+            // 
+            // NumberOnDateCheckbox
+            // 
+            this.NumberOnDateCheckbox.AutoSize = true;
+            this.NumberOnDateCheckbox.Location = new System.Drawing.Point(33, 137);
+            this.NumberOnDateCheckbox.Name = "NumberOnDateCheckbox";
+            this.NumberOnDateCheckbox.Size = new System.Drawing.Size(136, 17);
+            this.NumberOnDateCheckbox.TabIndex = 20;
+            this.NumberOnDateCheckbox.Text = "Number based on Date";
+            this.NumberOnDateCheckbox.UseVisualStyleBackColor = true;
+            this.NumberOnDateCheckbox.CheckedChanged += new System.EventHandler(this.NumberOnDateCheckbox_CheckedChanged);
             // 
             // checkbox_everything
             // 
@@ -435,6 +473,15 @@
             this.tabPage4.Text = "Duplicates";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // dupeLabel
+            // 
+            this.dupeLabel.AutoSize = true;
+            this.dupeLabel.Location = new System.Drawing.Point(28, 98);
+            this.dupeLabel.Name = "dupeLabel";
+            this.dupeLabel.Size = new System.Drawing.Size(138, 13);
+            this.dupeLabel.TabIndex = 21;
+            this.dupeLabel.Text = "Please choose the directory";
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -471,25 +518,6 @@
             this.button4.Text = "Run";
             this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // dupeLabel
-            // 
-            this.dupeLabel.AutoSize = true;
-            this.dupeLabel.Location = new System.Drawing.Point(28, 98);
-            this.dupeLabel.Name = "dupeLabel";
-            this.dupeLabel.Size = new System.Drawing.Size(138, 13);
-            this.dupeLabel.TabIndex = 21;
-            this.dupeLabel.Text = "Please choose the directory";
-            // 
-            // NumberOnDateCheckbox
-            // 
-            this.NumberOnDateCheckbox.AutoSize = true;
-            this.NumberOnDateCheckbox.Location = new System.Drawing.Point(277, 161);
-            this.NumberOnDateCheckbox.Name = "NumberOnDateCheckbox";
-            this.NumberOnDateCheckbox.Size = new System.Drawing.Size(136, 17);
-            this.NumberOnDateCheckbox.TabIndex = 20;
-            this.NumberOnDateCheckbox.Text = "Number based on Date";
-            this.NumberOnDateCheckbox.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -555,6 +583,8 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.CheckBox NumberOnDateCheckbox;
+        private System.Windows.Forms.RadioButton DescRadioButton;
+        private System.Windows.Forms.RadioButton AscRadioButton;
     }
 }
 

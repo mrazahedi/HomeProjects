@@ -15,7 +15,7 @@ namespace AutoRenameFiles
 {
     public partial class Form1 : Form
     {
-        public readonly List<string> IMAGE_EXTENSION_LIST = new List<string>()
+        public static readonly List<string> IMAGE_EXTENSION_LIST = new List<string>()
         {
             ".jpg",
             ".jpeg",
@@ -24,7 +24,7 @@ namespace AutoRenameFiles
             ".gif"
         };
 
-        public readonly List<string> VIDEO_EXTENSION_LIST = new List<string>()
+        public static readonly List<string> VIDEO_EXTENSION_LIST = new List<string>()
         {
             ".avi",
             ".mov",
@@ -33,23 +33,65 @@ namespace AutoRenameFiles
 
         public class CreationDateComparer : IComparer
         {
+            private bool _ascending = true;
+            public CreationDateComparer(bool asc)
+            {
+                _ascending = asc;
+            }
+
             // Call CaseInsensitiveComparer.Compare with the parameters reversed.
             public int Compare(object x, object y)
             {
-                return GetDateTakenFromImage((string)x).CompareTo(GetDateTakenFromImage((string)y));
+                //if(_ascending)
+                    return GetDateTakenFromImage((string)x).CompareTo(GetDateTakenFromImage((string)y));
+                //else
+                  //  return GetDateTakenFromImage((string)y).CompareTo(GetDateTakenFromImage((string)x));
             }
 
             public DateTime GetDateTakenFromImage(string path)
             {
+                System.DateTime time = System.DateTime.Now;
+
+                //if (!IMAGE_EXTENSION_LIST.Contains(System.IO.Path.GetExtension(path).ToLower()))
+                  //  return time;
+                if (!IsImage(System.IO.Path.GetExtension(path)))
+                    return time;
+                
                 System.Drawing.Image myImage = Image.FromFile(path);
-                System.Drawing.Imaging.PropertyItem propItem = myImage.GetPropertyItem(36867);
-                string dateTaken = new System.Text.RegularExpressions.Regex(":").Replace(System.Text.Encoding.UTF8.GetString(propItem.Value), "-", 2);
+                try
+                {
+                    System.Drawing.Imaging.PropertyItem propItem = myImage.GetPropertyItem(36867);
+                    time = System.DateTime.Parse(new System.Text.RegularExpressions.Regex(":").Replace(System.Text.Encoding.UTF8.GetString(propItem.Value), "-", 2));
+                }
+                catch
+                {
+                    System.Diagnostics.Debug.Write("\n" + "was not able to find creation date for " + path);
+                }
                 myImage.Dispose();
-                return System.DateTime.Parse(dateTaken);
+                return time;
+            }
+
+            public static bool IsImage(string extension)
+            {
+                switch(extension)
+                {
+                    case(".jpg"):
+                        return true;
+                    case(".png"):
+                        return true;
+                    case(".bmp"):
+                        return true;
+                    case(".gif"):
+                        return true;
+                    case(".jpeg"):
+                        return true;
+                    case (".tiff"):
+                        return true;
+                }
+                return false;              
             }
         }
 
-       
         //-----------------------------------------------------------------------------
         public Form1()
         {
@@ -131,7 +173,7 @@ namespace AutoRenameFiles
         {
             if (NumberOnDateCheckbox.Checked)
             {
-                CreationDateComparer comparer = new CreationDateComparer();
+                CreationDateComparer comparer = new CreationDateComparer(AscRadioButton.Checked);
                 Array.Sort(filePaths, comparer);
             }
 
@@ -456,6 +498,16 @@ namespace AutoRenameFiles
         private void button4_Click(object sender, EventArgs e)
         {
             RemoveDuplicates(dupeDir.Text);
+        }
+
+        private void NumberOnDateCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AscRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
