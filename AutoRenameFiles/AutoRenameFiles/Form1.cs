@@ -31,21 +31,20 @@ namespace AutoRenameFiles
             ".mp4",
         };
 
-        public class CreationDateComparer : IComparer
+        public class FileCreationInfo
         {
-            private bool _ascending = true;
-            public CreationDateComparer(bool asc)
-            {
-                _ascending = asc;
-            }
+            public string _path = null;
+            public string _tempPath = null;
+            public System.DateTime _creationDate = System.DateTime.Now;
 
-            // Call CaseInsensitiveComparer.Compare with the parameters reversed.
-            public int Compare(object x, object y)
+            public FileCreationInfo(string filePath, bool retrieveTakenTime)
             {
-                //if(_ascending)
-                    return GetDateTakenFromImage((string)x).CompareTo(GetDateTakenFromImage((string)y));
-                //else
-                  //  return GetDateTakenFromImage((string)y).CompareTo(GetDateTakenFromImage((string)x));
+                _path = filePath;
+                _tempPath = filePath;
+                if (retrieveTakenTime)
+                {
+                    _creationDate = GetDateTakenFromImage(_path);
+                }
             }
 
             public DateTime GetDateTakenFromImage(string path)
@@ -53,10 +52,10 @@ namespace AutoRenameFiles
                 System.DateTime time = System.DateTime.Now;
 
                 //if (!IMAGE_EXTENSION_LIST.Contains(System.IO.Path.GetExtension(path).ToLower()))
-                  //  return time;
+                //  return time;
                 if (!IsImage(System.IO.Path.GetExtension(path)))
                     return time;
-                
+
                 System.Drawing.Image myImage = Image.FromFile(path);
                 try
                 {
@@ -73,22 +72,40 @@ namespace AutoRenameFiles
 
             public static bool IsImage(string extension)
             {
-                switch(extension)
+                switch (extension.ToLower())
                 {
-                    case(".jpg"):
+                    case (".jpg"):
                         return true;
-                    case(".png"):
+                    case (".png"):
                         return true;
-                    case(".bmp"):
+                    case (".bmp"):
                         return true;
-                    case(".gif"):
+                    case (".gif"):
                         return true;
-                    case(".jpeg"):
+                    case (".jpeg"):
                         return true;
                     case (".tiff"):
                         return true;
                 }
-                return false;              
+                return false;
+            }
+        }
+
+        public class CreationDateComparer : IComparer<FileCreationInfo>
+        {
+            private bool _ascending = true;
+            public CreationDateComparer(bool asc)
+            {
+                _ascending = asc;
+            }
+
+            // Call CaseInsensitiveComparer.Compare with the parameters reversed.
+            public int Compare(FileCreationInfo x, FileCreationInfo y)
+            {
+                if(_ascending)
+                    return x._creationDate.CompareTo(y._creationDate);
+                else
+                    return y._creationDate.CompareTo(x._creationDate);
             }
         }
 
@@ -102,7 +119,7 @@ namespace AutoRenameFiles
         //-----------------------------------------------------------------------------
         private void renameButtonRun_Click(object sender, EventArgs e)
         {
-            RenameFiles(dirPath.Text, radioButtonUseSpace.Checked);
+            RenameFiles(dirPath.Text, radioButtonUseSpace.Checked, nameVideoCheckbox.Checked);
         }
 
         //-----------------------------------------------------------------------------
@@ -118,7 +135,27 @@ namespace AutoRenameFiles
         }
 
         //-----------------------------------------------------------------------------
-        public void RenameFiles(string rootDirPath, bool useSpace)
+        private List<FileCreationInfo> GetFileCreationInfoList(string[] filePaths, bool retrieveTakenTime)
+        {
+            List<FileCreationInfo> filePathInfoList = new List<FileCreationInfo>();
+            foreach (string path in filePaths)
+            {
+                UpdateStatusBoard(Color.Black, "Retrieving data for " + path);
+                filePathInfoList.Add(new FileCreationInfo(path, retrieveTakenTime));
+            }
+            if (NumberOnDateCheckbox.Checked)
+            {
+                UpdateStatusBoard(Color.Black, "Sorting files");
+                CreationDateComparer comparer = new CreationDateComparer(AscRadioButton.Checked);
+                filePathInfoList.Sort(comparer);
+                //Array.Sort(filePaths, comparer);
+            }
+
+            return filePathInfoList;
+        }
+
+        //-----------------------------------------------------------------------------
+        public void RenameFiles(string rootDirPath, bool useSpace, bool prefixVideos)
         {
             if (!Directory.Exists(rootDirPath))
             {
@@ -127,81 +164,116 @@ namespace AutoRenameFiles
                 return;
             }
 
-            outputLabel.ForeColor = Color.Black;
+            List<string> dirList = new List<string>();
+            dirList.Add(rootDirPath);
+            dirList.AddRange(Directory.GetDirectories(rootDirPath, "*", SearchOption.AllDirectories));
 
+            outputLabel.ForeColor = Color.Black;
+            progBar.BeginInvoke(new Action(() =>
+            {
+                progBar.Value = 0;
+                progBar.Maximum = dirList.Count();
+            }));
+
+            List<FileCreationInfo> _fileInfoList;
             new Thread(new ThreadStart(() =>
             {
-                
-                RenameFiles(Directory.GetFiles(rootDirPath), Path.GetDirectoryName(rootDirPath), "TEMP", useSpace);
-                RenameFiles(Directory.GetFiles(rootDirPath), Path.GetDirectoryName(rootDirPath), "", useSpace);
-
-                string[] allDirectories = Directory.GetDirectories(rootDirPath, "*", SearchOption.AllDirectories);
-
-                progBar.BeginInvoke(new Action(() =>
+                UpdateStatusBoard(Color.Black, "Retrieving File Info");
+                foreach (string directoryPath in dirList)
                 {
-                    progBar.Value = 0;
-                    progBar.Maximum = allDirectories.Count();
-                }));
+                    UpdateStatusBoard(Color.Black, "Renaming files in " + directoryPath);
 
-                foreach (string directoryPath in allDirectories)
-                {
-                    outputLabel.BeginInvoke(new Action(() =>
-                    {
-                        outputLabel.Text = "Renaming files in " + directoryPath;
-                    }));
-
-                    RenameFiles(Directory.GetFiles(directoryPath), Path.GetDirectoryName(directoryPath), "TEMP", useSpace);
-                    RenameFiles(Directory.GetFiles(directoryPath), Path.GetDirectoryName(directoryPath), "", useSpace);
+                    _fileInfoList = GetFileCreationInfoList(Directory.GetFiles(directoryPath), NumberOnDateCheckbox.Checked);                    
+                    RenameFiles(_fileInfoList, Path.GetDirectoryName(directoryPath), useSpace, prefixVideos);
 
                     progBar.BeginInvoke(new Action(() =>
                     {
                         progBar.PerformStep();
                     }));
-                    
                 }
-                outputLabel.BeginInvoke(new Action(() =>
-                {
-                    outputLabel.ForeColor = Color.Green;
-                    outputLabel.Text = "Completed";
-                }));
-
+                UpdateStatusBoard(Color.Green, "Completed");
             })).Start();
         }
 
         //-----------------------------------------------------------------------------
-        public void RenameFiles(string[] filePaths, string prefix, string specialPrefix, bool useSpace)
+        public void UpdateStatusBoard(Color color, string message)
         {
-            if (NumberOnDateCheckbox.Checked)
+            outputLabel.BeginInvoke(new Action(() =>
             {
-                CreationDateComparer comparer = new CreationDateComparer(AscRadioButton.Checked);
-                Array.Sort(filePaths, comparer);
-            }
+                outputLabel.ForeColor = color;
+                outputLabel.Text = message;
+            }));
+        }
 
+        //-----------------------------------------------------------------------------
+        public void RenameFiles(List<FileCreationInfo> filePathInfoList, string prefix, bool useSpace, bool prefixVideos)
+        {
             int postfixDigit = 1;
             string nameDigitSpace = useSpace ? " " : "";
-            foreach (string filePath in filePaths)
-            {
-                if (!ExtensionAllowed(Path.GetExtension(filePath)))
-                    continue;
+            string prefixVideoString = prefixVideos ? ("Video" + nameDigitSpace) : "";
 
-                string newPath = Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar +
-                                Directory.GetParent(filePath).Name + nameDigitSpace + postfixDigit.ToString("000") + specialPrefix + Path.GetExtension(filePath);
-                File.Move(filePath, newPath);
-                postfixDigit++;
+            bool isImage = false;
+            bool isVideo = false;
+
+            //We need to run two passes. One to posfix with TEMP and one to clean it up. This is to avoid clashing names
+            string tempPrefix = "TEMP";
+            for (int i = 0; i < 2; ++i)
+            {
+                postfixDigit = 1;
+                if (i == 1)
+                {
+                    tempPrefix = "";
+                }
+                foreach (FileCreationInfo filePathInfo in filePathInfoList)
+                {
+                    string filePath = filePathInfo._path;
+                    isImage = false;
+                    isVideo = false;
+
+                    if (!ExtensionAllowed(Path.GetExtension(filePath), ref isImage, ref isVideo))
+                        continue;
+
+                    string prefixVidStr = "";
+                    if (isVideo)
+                    {
+                        prefixVidStr = prefixVideoString;
+                    }
+
+                    string newPath = Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar +
+                                    Directory.GetParent(filePath).Name + nameDigitSpace + prefixVidStr + postfixDigit.ToString("000") + tempPrefix + Path.GetExtension(filePath);
+
+                    if (i == 0)
+                    {
+                        filePathInfo._tempPath = newPath;
+                    }
+                    else
+                    {
+                        filePath = filePathInfo._tempPath;
+                    }
+
+                    File.Move(filePath, newPath);
+                    postfixDigit++;
+                }
             }
         }
 
         //-----------------------------------------------------------------------------
-        public bool ExtensionAllowed(string extension)
+        public bool ExtensionAllowed(string extension, ref bool isImage, ref bool isVideo)
         {
             if (checkbox_everything.Checked)
                 return true;
 
             if (checkbox_image.Checked && IMAGE_EXTENSION_LIST.Contains(extension.ToLower()))
+            {
+                isImage = true;
                 return true;
+            }
 
             if (checkbox_video.Checked && VIDEO_EXTENSION_LIST.Contains(extension.ToLower()))
+            {
+                isVideo = true;
                 return true;
+            }
 
             return false;
         }
@@ -506,6 +578,16 @@ namespace AutoRenameFiles
         }
 
         private void AscRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void nameVideoCheckbox_CheckedChanged(object sender, EventArgs e)
         {
 
         }

@@ -31,14 +31,20 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.AutoRename = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.DescRadioButton = new System.Windows.Forms.RadioButton();
-            this.AscRadioButton = new System.Windows.Forms.RadioButton();
-            this.NumberOnDateCheckbox = new System.Windows.Forms.CheckBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.nameVideoCheckbox = new System.Windows.Forms.CheckBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.radioButtonNoSpace = new System.Windows.Forms.RadioButton();
+            this.radioButtonUseSpace = new System.Windows.Forms.RadioButton();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.checkbox_everything = new System.Windows.Forms.CheckBox();
             this.checkbox_video = new System.Windows.Forms.CheckBox();
             this.checkbox_image = new System.Windows.Forms.CheckBox();
-            this.radioButtonNoSpace = new System.Windows.Forms.RadioButton();
-            this.radioButtonUseSpace = new System.Windows.Forms.RadioButton();
+            this.label7 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.DescRadioButton = new System.Windows.Forms.RadioButton();
+            this.AscRadioButton = new System.Windows.Forms.RadioButton();
+            this.NumberOnDateCheckbox = new System.Windows.Forms.CheckBox();
             this.progBar = new System.Windows.Forms.ProgressBar();
             this.outputLabel = new System.Windows.Forms.Label();
             this.dirPath = new System.Windows.Forms.TextBox();
@@ -73,6 +79,9 @@
             this.button4 = new System.Windows.Forms.Button();
             this.AutoRename.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -89,20 +98,15 @@
             this.AutoRename.Location = new System.Drawing.Point(3, 1);
             this.AutoRename.Name = "AutoRename";
             this.AutoRename.SelectedIndex = 0;
-            this.AutoRename.Size = new System.Drawing.Size(492, 279);
+            this.AutoRename.Size = new System.Drawing.Size(451, 382);
             this.AutoRename.TabIndex = 10;
             this.AutoRename.Tag = "";
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.DescRadioButton);
-            this.tabPage1.Controls.Add(this.AscRadioButton);
-            this.tabPage1.Controls.Add(this.NumberOnDateCheckbox);
-            this.tabPage1.Controls.Add(this.checkbox_everything);
-            this.tabPage1.Controls.Add(this.checkbox_video);
-            this.tabPage1.Controls.Add(this.checkbox_image);
-            this.tabPage1.Controls.Add(this.radioButtonNoSpace);
-            this.tabPage1.Controls.Add(this.radioButtonUseSpace);
+            this.tabPage1.Controls.Add(this.panel3);
+            this.tabPage1.Controls.Add(this.panel2);
+            this.tabPage1.Controls.Add(this.panel1);
             this.tabPage1.Controls.Add(this.progBar);
             this.tabPage1.Controls.Add(this.outputLabel);
             this.tabPage1.Controls.Add(this.dirPath);
@@ -111,62 +115,95 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(484, 253);
+            this.tabPage1.Size = new System.Drawing.Size(443, 356);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Rename";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // DescRadioButton
+            // panel3
             // 
-            this.DescRadioButton.AutoSize = true;
-            this.DescRadioButton.Location = new System.Drawing.Point(82, 160);
-            this.DescRadioButton.Name = "DescRadioButton";
-            this.DescRadioButton.Size = new System.Drawing.Size(50, 17);
-            this.DescRadioButton.TabIndex = 22;
-            this.DescRadioButton.TabStop = true;
-            this.DescRadioButton.Text = "Desc";
-            this.DescRadioButton.UseVisualStyleBackColor = true;
+            this.panel3.Controls.Add(this.nameVideoCheckbox);
+            this.panel3.Controls.Add(this.label8);
+            this.panel3.Controls.Add(this.radioButtonNoSpace);
+            this.panel3.Controls.Add(this.radioButtonUseSpace);
+            this.panel3.Location = new System.Drawing.Point(30, 55);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(209, 97);
+            this.panel3.TabIndex = 26;
             // 
-            // AscRadioButton
+            // nameVideoCheckbox
             // 
-            this.AscRadioButton.AutoSize = true;
-            this.AscRadioButton.Location = new System.Drawing.Point(33, 160);
-            this.AscRadioButton.Name = "AscRadioButton";
-            this.AscRadioButton.Size = new System.Drawing.Size(43, 17);
-            this.AscRadioButton.TabIndex = 21;
-            this.AscRadioButton.TabStop = true;
-            this.AscRadioButton.Text = "Asc";
-            this.AscRadioButton.UseVisualStyleBackColor = true;
-            this.AscRadioButton.CheckedChanged += new System.EventHandler(this.AscRadioButton_CheckedChanged);
+            this.nameVideoCheckbox.AutoSize = true;
+            this.nameVideoCheckbox.Location = new System.Drawing.Point(11, 70);
+            this.nameVideoCheckbox.Name = "nameVideoCheckbox";
+            this.nameVideoCheckbox.Size = new System.Drawing.Size(191, 17);
+            this.nameVideoCheckbox.TabIndex = 23;
+            this.nameVideoCheckbox.Text = "Add \'Video\' - Ex: party Video 1.mp4";
+            this.nameVideoCheckbox.UseVisualStyleBackColor = true;
+            this.nameVideoCheckbox.CheckedChanged += new System.EventHandler(this.nameVideoCheckbox_CheckedChanged);
             // 
-            // NumberOnDateCheckbox
+            // label8
             // 
-            this.NumberOnDateCheckbox.AutoSize = true;
-            this.NumberOnDateCheckbox.Location = new System.Drawing.Point(33, 137);
-            this.NumberOnDateCheckbox.Name = "NumberOnDateCheckbox";
-            this.NumberOnDateCheckbox.Size = new System.Drawing.Size(136, 17);
-            this.NumberOnDateCheckbox.TabIndex = 20;
-            this.NumberOnDateCheckbox.Text = "Number based on Date";
-            this.NumberOnDateCheckbox.UseVisualStyleBackColor = true;
-            this.NumberOnDateCheckbox.CheckedChanged += new System.EventHandler(this.NumberOnDateCheckbox_CheckedChanged);
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(8, 6);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(43, 13);
+            this.label8.TabIndex = 19;
+            this.label8.Text = "Options";
+            // 
+            // radioButtonNoSpace
+            // 
+            this.radioButtonNoSpace.AutoSize = true;
+            this.radioButtonNoSpace.Location = new System.Drawing.Point(11, 45);
+            this.radioButtonNoSpace.Name = "radioButtonNoSpace";
+            this.radioButtonNoSpace.Size = new System.Drawing.Size(137, 17);
+            this.radioButtonNoSpace.TabIndex = 18;
+            this.radioButtonNoSpace.Text = "No Space - Ex: pic4.jpg";
+            this.radioButtonNoSpace.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonUseSpace
+            // 
+            this.radioButtonUseSpace.AutoSize = true;
+            this.radioButtonUseSpace.Checked = true;
+            this.radioButtonUseSpace.Location = new System.Drawing.Point(11, 22);
+            this.radioButtonUseSpace.Name = "radioButtonUseSpace";
+            this.radioButtonUseSpace.Size = new System.Drawing.Size(145, 17);
+            this.radioButtonUseSpace.TabIndex = 17;
+            this.radioButtonUseSpace.TabStop = true;
+            this.radioButtonUseSpace.Text = "Use Space - Ex: pic 4.jpg";
+            this.radioButtonUseSpace.UseVisualStyleBackColor = true;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.checkbox_everything);
+            this.panel2.Controls.Add(this.checkbox_video);
+            this.panel2.Controls.Add(this.checkbox_image);
+            this.panel2.Controls.Add(this.label7);
+            this.panel2.Location = new System.Drawing.Point(245, 125);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(141, 100);
+            this.panel2.TabIndex = 24;
+            this.panel2.Tag = "";
             // 
             // checkbox_everything
             // 
             this.checkbox_everything.AutoSize = true;
-            this.checkbox_everything.Location = new System.Drawing.Point(277, 138);
+            this.checkbox_everything.Location = new System.Drawing.Point(19, 73);
             this.checkbox_everything.Name = "checkbox_everything";
             this.checkbox_everything.Size = new System.Drawing.Size(76, 17);
-            this.checkbox_everything.TabIndex = 19;
+            this.checkbox_everything.TabIndex = 22;
             this.checkbox_everything.Text = "Everything";
             this.checkbox_everything.UseVisualStyleBackColor = true;
             // 
             // checkbox_video
             // 
             this.checkbox_video.AutoSize = true;
-            this.checkbox_video.Location = new System.Drawing.Point(277, 115);
+            this.checkbox_video.Checked = true;
+            this.checkbox_video.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkbox_video.Location = new System.Drawing.Point(19, 50);
             this.checkbox_video.Name = "checkbox_video";
             this.checkbox_video.Size = new System.Drawing.Size(120, 17);
-            this.checkbox_video.TabIndex = 18;
+            this.checkbox_video.TabIndex = 21;
             this.checkbox_video.Text = "Video ( avi, mp4 ... )";
             this.checkbox_video.UseVisualStyleBackColor = true;
             // 
@@ -175,38 +212,69 @@
             this.checkbox_image.AutoSize = true;
             this.checkbox_image.Checked = true;
             this.checkbox_image.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_image.Location = new System.Drawing.Point(277, 92);
+            this.checkbox_image.Location = new System.Drawing.Point(19, 27);
             this.checkbox_image.Name = "checkbox_image";
             this.checkbox_image.Size = new System.Drawing.Size(120, 17);
-            this.checkbox_image.TabIndex = 17;
+            this.checkbox_image.TabIndex = 20;
             this.checkbox_image.Text = "Image ( jpg, png ... )";
             this.checkbox_image.UseVisualStyleBackColor = true;
             // 
-            // radioButtonNoSpace
+            // label7
             // 
-            this.radioButtonNoSpace.AutoSize = true;
-            this.radioButtonNoSpace.Location = new System.Drawing.Point(30, 84);
-            this.radioButtonNoSpace.Name = "radioButtonNoSpace";
-            this.radioButtonNoSpace.Size = new System.Drawing.Size(137, 17);
-            this.radioButtonNoSpace.TabIndex = 16;
-            this.radioButtonNoSpace.Text = "No Space - Ex: pic4.jpg";
-            this.radioButtonNoSpace.UseVisualStyleBackColor = true;
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 9);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(71, 13);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "Rename Files";
+            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
-            // radioButtonUseSpace
+            // panel1
             // 
-            this.radioButtonUseSpace.AutoSize = true;
-            this.radioButtonUseSpace.Checked = true;
-            this.radioButtonUseSpace.Location = new System.Drawing.Point(30, 61);
-            this.radioButtonUseSpace.Name = "radioButtonUseSpace";
-            this.radioButtonUseSpace.Size = new System.Drawing.Size(145, 17);
-            this.radioButtonUseSpace.TabIndex = 15;
-            this.radioButtonUseSpace.TabStop = true;
-            this.radioButtonUseSpace.Text = "Use Space - Ex: pic 4.jpg";
-            this.radioButtonUseSpace.UseVisualStyleBackColor = true;
+            this.panel1.BackColor = System.Drawing.Color.MistyRose;
+            this.panel1.Controls.Add(this.DescRadioButton);
+            this.panel1.Controls.Add(this.AscRadioButton);
+            this.panel1.Controls.Add(this.NumberOnDateCheckbox);
+            this.panel1.Location = new System.Drawing.Point(30, 166);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(142, 59);
+            this.panel1.TabIndex = 23;
+            // 
+            // DescRadioButton
+            // 
+            this.DescRadioButton.AutoSize = true;
+            this.DescRadioButton.Location = new System.Drawing.Point(52, 26);
+            this.DescRadioButton.Name = "DescRadioButton";
+            this.DescRadioButton.Size = new System.Drawing.Size(50, 17);
+            this.DescRadioButton.TabIndex = 25;
+            this.DescRadioButton.Text = "Desc";
+            this.DescRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // AscRadioButton
+            // 
+            this.AscRadioButton.AutoSize = true;
+            this.AscRadioButton.Checked = true;
+            this.AscRadioButton.Location = new System.Drawing.Point(3, 26);
+            this.AscRadioButton.Name = "AscRadioButton";
+            this.AscRadioButton.Size = new System.Drawing.Size(43, 17);
+            this.AscRadioButton.TabIndex = 24;
+            this.AscRadioButton.TabStop = true;
+            this.AscRadioButton.Text = "Asc";
+            this.AscRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // NumberOnDateCheckbox
+            // 
+            this.NumberOnDateCheckbox.AutoSize = true;
+            this.NumberOnDateCheckbox.Location = new System.Drawing.Point(3, 3);
+            this.NumberOnDateCheckbox.Name = "NumberOnDateCheckbox";
+            this.NumberOnDateCheckbox.Size = new System.Drawing.Size(136, 17);
+            this.NumberOnDateCheckbox.TabIndex = 23;
+            this.NumberOnDateCheckbox.Text = "Number based on Date";
+            this.NumberOnDateCheckbox.UseVisualStyleBackColor = true;
             // 
             // progBar
             // 
-            this.progBar.Location = new System.Drawing.Point(30, 190);
+            this.progBar.Location = new System.Drawing.Point(30, 248);
             this.progBar.Name = "progBar";
             this.progBar.Size = new System.Drawing.Size(356, 23);
             this.progBar.Step = 1;
@@ -214,10 +282,9 @@
             // 
             // outputLabel
             // 
-            this.outputLabel.AutoSize = true;
-            this.outputLabel.Location = new System.Drawing.Point(30, 216);
+            this.outputLabel.Location = new System.Drawing.Point(30, 274);
             this.outputLabel.Name = "outputLabel";
-            this.outputLabel.Size = new System.Drawing.Size(138, 13);
+            this.outputLabel.Size = new System.Drawing.Size(356, 79);
             this.outputLabel.TabIndex = 13;
             this.outputLabel.Text = "Please choose the directory";
             // 
@@ -267,7 +334,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(484, 253);
+            this.tabPage2.Size = new System.Drawing.Size(442, 360);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Resize";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -351,10 +418,9 @@
             // 
             // resizeOutputLabel
             // 
-            this.resizeOutputLabel.AutoSize = true;
             this.resizeOutputLabel.Location = new System.Drawing.Point(28, 212);
             this.resizeOutputLabel.Name = "resizeOutputLabel";
-            this.resizeOutputLabel.Size = new System.Drawing.Size(138, 13);
+            this.resizeOutputLabel.Size = new System.Drawing.Size(356, 73);
             this.resizeOutputLabel.TabIndex = 18;
             this.resizeOutputLabel.Text = "Please choose the directory";
             // 
@@ -367,7 +433,7 @@
             // 
             // resizeButtonBrowse
             // 
-            this.resizeButtonBrowse.Location = new System.Drawing.Point(275, 30);
+            this.resizeButtonBrowse.Location = new System.Drawing.Point(324, 28);
             this.resizeButtonBrowse.Name = "resizeButtonBrowse";
             this.resizeButtonBrowse.Size = new System.Drawing.Size(75, 23);
             this.resizeButtonBrowse.TabIndex = 16;
@@ -378,7 +444,7 @@
             // resizeButtonRun
             // 
             this.resizeButtonRun.BackColor = System.Drawing.Color.LightGreen;
-            this.resizeButtonRun.Location = new System.Drawing.Point(275, 58);
+            this.resizeButtonRun.Location = new System.Drawing.Point(324, 69);
             this.resizeButtonRun.Name = "resizeButtonRun";
             this.resizeButtonRun.Size = new System.Drawing.Size(75, 23);
             this.resizeButtonRun.TabIndex = 15;
@@ -396,7 +462,7 @@
             this.tabPage3.Controls.Add(this.button2);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(484, 253);
+            this.tabPage3.Size = new System.Drawing.Size(442, 360);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Flatten";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -404,7 +470,7 @@
             // deleteEmptyDirs
             // 
             this.deleteEmptyDirs.AutoSize = true;
-            this.deleteEmptyDirs.Location = new System.Drawing.Point(316, 127);
+            this.deleteEmptyDirs.Location = new System.Drawing.Point(249, 133);
             this.deleteEmptyDirs.Name = "deleteEmptyDirs";
             this.deleteEmptyDirs.Size = new System.Drawing.Size(142, 17);
             this.deleteEmptyDirs.TabIndex = 20;
@@ -413,10 +479,9 @@
             // 
             // flattenFilesOutputLabel
             // 
-            this.flattenFilesOutputLabel.AutoSize = true;
             this.flattenFilesOutputLabel.Location = new System.Drawing.Point(32, 107);
             this.flattenFilesOutputLabel.Name = "flattenFilesOutputLabel";
-            this.flattenFilesOutputLabel.Size = new System.Drawing.Size(138, 13);
+            this.flattenFilesOutputLabel.Size = new System.Drawing.Size(211, 191);
             this.flattenFilesOutputLabel.TabIndex = 19;
             this.flattenFilesOutputLabel.Text = "Please choose the directory";
             // 
@@ -468,17 +533,16 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(484, 253);
+            this.tabPage4.Size = new System.Drawing.Size(442, 360);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Duplicates";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // dupeLabel
             // 
-            this.dupeLabel.AutoSize = true;
             this.dupeLabel.Location = new System.Drawing.Point(28, 98);
             this.dupeLabel.Name = "dupeLabel";
-            this.dupeLabel.Size = new System.Drawing.Size(138, 13);
+            this.dupeLabel.Size = new System.Drawing.Size(265, 230);
             this.dupeLabel.TabIndex = 21;
             this.dupeLabel.Text = "Please choose the directory";
             // 
@@ -523,13 +587,19 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(497, 282);
+            this.ClientSize = new System.Drawing.Size(457, 387);
             this.Controls.Add(this.AutoRename);
             this.Name = "Form1";
             this.Text = "AutoRename";
             this.AutoRename.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -545,11 +615,6 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.TabControl AutoRename;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.CheckBox checkbox_everything;
-        private System.Windows.Forms.CheckBox checkbox_video;
-        private System.Windows.Forms.CheckBox checkbox_image;
-        private System.Windows.Forms.RadioButton radioButtonNoSpace;
-        private System.Windows.Forms.RadioButton radioButtonUseSpace;
         private System.Windows.Forms.ProgressBar progBar;
         private System.Windows.Forms.Label outputLabel;
         private System.Windows.Forms.TextBox dirPath;
@@ -582,9 +647,20 @@
         private System.Windows.Forms.TextBox dupeDir;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.CheckBox NumberOnDateCheckbox;
+        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RadioButton DescRadioButton;
         private System.Windows.Forms.RadioButton AscRadioButton;
+        private System.Windows.Forms.CheckBox NumberOnDateCheckbox;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.CheckBox nameVideoCheckbox;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.RadioButton radioButtonNoSpace;
+        private System.Windows.Forms.RadioButton radioButtonUseSpace;
+        private System.Windows.Forms.CheckBox checkbox_everything;
+        private System.Windows.Forms.CheckBox checkbox_video;
+        private System.Windows.Forms.CheckBox checkbox_image;
     }
 }
 
